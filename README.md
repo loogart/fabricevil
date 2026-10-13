@@ -88,4 +88,4 @@ Visual entrances now travel 12px. Paper settling is quieter (half-percent scale,
 
 Mobile book framing keeps the original Figma crop proportions. The Contact email wraps at the @ boundary instead of splitting its domain; its original marker asset scales vertically to cover all wrapped lines while sharing the text reveal layer. Small-phone paperclip placement clears the title. Mobile navigation controls have at least 44px height.
 
-Hero H1: a short word-by-word fade and 8px rise plays once on load, alongside the existing hero lines. Native spaces retain responsive wrapping; a single accessible heading copy stays available. Reduced-motion preferences skip the entrance.
+Hero H1: words appear in place from a subtle 3px blur, with length-sensitive typing intervals and a brief pause before “avocat.” The sequence plays once on load alongside the existing hero lines. Native spaces retain responsive wrapping; a single accessible heading copy stays available. Reduced-motion preferences skip the entrance.

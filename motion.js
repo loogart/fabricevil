@@ -167,7 +167,7 @@ function setupGreeting() {
   greetingHasPlayed=true;
   typewriter(document.querySelector('.speech-bubble'),false,.45);
 }
-// A quiet word-by-word entrance preserves the heading's native wrapping.
+// Words resolve in place with a measured typing rhythm and native wrapping.
 function setupHeroTitle() {
   if (heroTitleHasPlayed) return;
   const heading=document.querySelector('#intro-title');
@@ -185,9 +185,17 @@ function setupHeroTitle() {
     word.className='hero-title-word';word.textContent=token;visual.append(word);
   }
   heading.replaceChildren(accessible,visual);
-  gsap.from(visual.querySelectorAll('.hero-title-word'),{
-    opacity:0,y:8,duration:.55,stagger:.055,delay:.18,ease:'power2.out'
-  });
+  const words=[...visual.querySelectorAll('.hero-title-word')];
+  gsap.set(words,{opacity:0,filter:'blur(3px)'});
+  const timeline=gsap.timeline({delay:.24});
+  let position=0;
+  for (const word of words) {
+    timeline.to(word,{opacity:1,filter:'blur(0px)',duration:.24,ease:'power2.out'},position);
+    position+=.11+Math.min(word.textContent.length,10)*.012;
+    if (word.textContent.endsWith(':')) position+=.16;
+  }
+  timeline.set(words,{clearProps:'filter'});
+
 }
 function setupStoryMotion() {
   typewriter(document.querySelector('#about-title'),true);

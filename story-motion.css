@@ -10,5 +10,5 @@
 .motion-reduced .body-line-reveal { mask-image:none !important; -webkit-mask-image:none !important; }
 @media(prefers-reduced-motion:reduce) { .body-line-reveal { mask-image:none !important; -webkit-mask-image:none !important; } }
 
-/* The hero speaks in words on load, with no persistent cursor. */
+/* The hero types in words on load, resolving from a soft blur. */
 .hero-title-word { display:inline-block; }
