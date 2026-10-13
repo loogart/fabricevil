@@ -152,3 +152,7 @@ body.motion-reduced,body.motion-reduced * { scroll-behavior:auto !important; }
 }
 .works-intro { position:relative; z-index:1; }
 .experience-copy p { margin-bottom:24px; }
+
+/* Keep the email legible on both the green card and its moving lime marker. */
+.contact-email a { color:#e9e8e2; }
+.email-ink { position:absolute; inset:0; padding:inherit; color:var(--ink); pointer-events:none; }

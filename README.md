@@ -13,7 +13,7 @@ Shoutouts follows the latest Figma design: a green grid background, six original
 - index.html: section content, links, images, and navigation.
 - styles.css: hero, speech bubble, and shared base styles.
 - sections.css: remaining sections and responsive layouts.
-- motion.js: paper motion, motion preference controls, mobile menu, and SVG wrapper scaling.
+- motion.js: reversible scroll lines, motion preference controls, mobile menu, and SVG wrapper scaling.
 - assets/: original Figma assets, local fonts, and the supplied character SVG.
 - vendor/: locally bundled Bootstrap, GSAP, and ScrollTrigger.
 
@@ -21,7 +21,7 @@ Open index.html directly or serve this directory with any static web server. No 
 
 ## Character and motion
 
-Fabrice's SVG is unchanged byte for byte and rendered at its natural proportions. The basketball and its timeline are removed. Character animation will be provided by the user later; data-lottie-slot="character" reserves a future mount, with no Lottie runtime loaded now. Current motion only settles the hero paper and moves its lime accent gently with scrolling. Manual and operating-system reduced-motion settings disable motion and smooth scrolling.
+Fabrice's SVG is unchanged byte for byte and rendered at its natural proportions. The basketball and its timeline are removed. Character animation will be provided by the user later; data-lottie-slot="character" reserves a future mount, with no Lottie runtime loaded now. Current line motion follows scroll progress in both directions; paper and card motion is reserved for the next review. Manual and operating-system reduced-motion settings disable motion and smooth scrolling.
 
 The speech-bubble tail is a solid white CSS triangle, anchored to the bottom edge with an eight-pixel overlap. Its entire base sits beneath the bubble; both edges stay joined at desktop and mobile sizes.
 
@@ -31,7 +31,7 @@ Browser checks at widths 320, 390, 768, 1024, 1440, and 1920 found no horizontal
 
 Mobile layouts adapt the provided desktop composition; no mobile Figma reference was supplied. Character animations remain pending. No CMS, analytics, or deployment has been added.
 
-Next approval gate: review the complete draft, including Shoutouts, before publication or more elaborate motion.
+Next approval gate: review reversible line motion before adding paper animations or publishing.
 
 Dependency documentation: https://getbootstrap.com/docs/5.3/ and https://gsap.com/docs/v3/Installation/
 
@@ -46,10 +46,10 @@ Contact now includes the original Figma silver paperclip asset, cropped and rota
 Shoutouts portrait refresh: all six portrait files now use the updated Figma images with baked-in papercut edges. No CSS box shadow or drop shadow is applied to the portraits. The old Bayo image crop was removed to match the updated Figma frame. Desktop and mobile images loaded and fit without horizontal overflow.
 
 
-## Motion approval sample
+## Reversible scroll lines
 
-Livres et docus now has a highlight wipe, a short staggered entrance for its book/TV/browser visuals, and a paper-card settling effect. Réflexions draws its lime doodle through an animated SVG stroke mask over the original external vector file. The completed mask is removed to display every original detail. No source illustration paths or character files are modified.
+The hero highlighter and rule, Livres et docus highlight, Réflexions doodle, Contact email highlight, and footer doodle/rule follow scroll position. They draw on section entry, remain visible through the middle of the section, and erase on exit. Scrolling in either direction reverses the same timeline. The hero starts its timeline at the top of the page. No animation is marked once-only. Adjust LINE_MOTION in motion.js for reveal/hold/erase proportions.
 
-Adjust SECTION_MOTION in motion.js, or set enabled to false to disable this sample. Animations play once as their elements enter view. Both manual and operating-system reduced-motion settings restore the immediate static presentation. Other sections retain their existing behavior pending approval.
+Paper, card, and image entrance effects are held for the next approval pass. All art remains static and fully visible with reduced motion, including the original unmasked Réflexions doodle.
 
-The local repository was imported from the reviewed website draft. GitHub remote synchronization is separate from local development; no deployment is configured.
+Scroll verification: entry, middle, exit, and reverse positions were checked on desktop and mobile. Seven timelines are active; manual reduced motion removes all seven and restores complete artwork. The Contact email uses synchronized foreground clipping to stay readable during its marker reveal.

@@ -1,6 +1,5 @@
 /* Edit motion settings here; the character artwork is never transformed. */
-const HERO_MOTION = { paperShift:14 };
-const SECTION_MOTION = { enabled:true, entrance:.75, stagger:.13, inkDuration:2.2 };
+const LINE_MOTION = { enabled:true, draw:.28, hold:.44, erase:.28 };
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const toggleButton = document.querySelector('#motion-toggle');
 const status = document.querySelector('#motion-status');
@@ -16,11 +15,9 @@ function configureMotion() {
   if (!window.gsap) { status.textContent = 'Animation indisponible. Le visuel reste affiché.'; return; }
   if (reduced) return;
   motionContext = gsap.context(() => {
-    gsap.from('.hero-paper', {y:12, rotation:-.35, duration:1.05, ease:'power2.out'});
-    if (window.ScrollTrigger) {
+    if (window.ScrollTrigger && LINE_MOTION.enabled) {
       gsap.registerPlugin(ScrollTrigger);
-      gsap.to('.paper-accent', {y:HERO_MOTION.paperShift, ease:'none', scrollTrigger:{trigger:'.hero-paper', start:'top top', end:'bottom top', scrub:true}});
-      if (SECTION_MOTION.enabled) setupSectionMotion();
+      setupScrollLines();
     }
   });
 }
@@ -53,31 +50,63 @@ document.querySelectorAll('#mobile-nav a').forEach(link=>link.addEventListener('
   menuButton.querySelector('span').textContent='＋';
 }));
 
-// Approval sample: only Livres et docus and Réflexions receive new motion.
-function setupSectionMotion() {
-  gsap.from('.heading-highlight', {
-    clipPath:'inset(0 100% 0 0)', duration:.65, ease:'power2.out',
-    scrollTrigger:{trigger:'.works-heading',start:'top 88%',once:true}
-  });
-  gsap.from(['.book-slot','.television-slot','.browser-slot'], {
-    y:24, opacity:0, duration:SECTION_MOTION.entrance,
-    stagger:SECTION_MOTION.stagger, ease:'power2.out',
-    scrollTrigger:{trigger:'.works-collage',start:'top 88%',once:true}
-  });
-  gsap.from('.collective-sheet', {
-    y:22, opacity:0, rotation:2.5, duration:.9, ease:'power2.out',
-    scrollTrigger:{trigger:'.collective-sheet',start:'top 90%',once:true}
-  });
+// Lines draw on entry, hold while the section is in view, and erase on exit.
+// Every frame is controlled by scroll position, including when scrolling backward.
+function lineTimeline(trigger, hero=false) {
+  return gsap.timeline({scrollTrigger:{
+    trigger,
+    start:hero ? 'top top' : 'top bottom',
+    end:'bottom top',
+    scrub:true,
+    invalidateOnRefresh:true
+  }});
+}
+function wipeLine(selector, trigger, hero=false) {
+  const element=document.querySelector(selector);
+  if (!element) return;
+  const hidden='inset(0 100% 0 0)';
+  const shown='inset(0 0% 0 0)';
+  const ink=selector==='.email-highlight' ? document.querySelector('.email-ink') : null;
+  let updateInk;
+  if (ink) {
+    gsap.set(ink,{clipPath:hidden});
+    const setClip=gsap.quickSetter(ink,'clipPath');
+    updateInk=()=>{
+      const clip=getComputedStyle(element).clipPath;
+      const percent=Number(clip.match(/inset\([^ ]+\s+([\d.]+)%/)?.[1] || 0);
+      const marker=element.getBoundingClientRect(),text=ink.getBoundingClientRect();
+      const edge=marker.left+marker.width*(1-percent/100);
+      const right=Math.max(0,Math.min(text.width,text.right-edge));
+      setClip(`inset(0 ${right}px 0 0)`);
+    };
+  }
+  const timeline=lineTimeline(trigger,hero);
+  if (updateInk) timeline.eventCallback('onUpdate',updateInk);
+  timeline
+    .fromTo(element,{clipPath:hidden},{clipPath:shown,duration:LINE_MOTION.draw,ease:'none'})
+    .to(element,{clipPath:shown,duration:LINE_MOTION.hold,ease:'none'})
+    .to(element,{clipPath:hidden,duration:LINE_MOTION.erase,ease:'none'});
+}
+function setupScrollLines() {
+  wipeLine('.paper-accent','.hero-paper',true);
+  wipeLine('.rule-wrap','.hero-paper',true);
+  wipeLine('.heading-highlight','#oeuvres');
+  wipeLine('.email-highlight','#contact');
+  wipeLine('.footer-doodle','.site-footer');
+  wipeLine('.footer-rule','.site-footer');
+
   const guide=document.querySelector('#reflection-ink-guide');
   const art=document.querySelector('#reflection-ink-art');
+  const full=document.querySelector('#reflection-ink-full');
   const length=guide.getTotalLength();
-  // Animate a reveal mask over the untouched, filled Figma vector.
   gsap.set(art,{attr:{mask:'url(#reflection-ink-mask)'}});
+  gsap.set(full,{opacity:0});
   gsap.set(guide,{strokeDasharray:length,strokeDashoffset:length});
-  gsap.to(guide,{
-    strokeDashoffset:0,duration:SECTION_MOTION.inkDuration,ease:'power1.inOut',
-    scrollTrigger:{trigger:'.reflection-visual',start:'top 88%',once:true},
-    // Remove the completed mask so every original detail remains visible.
-    onComplete:()=>art.removeAttribute('mask')
-  });
+  lineTimeline('#reflexions')
+    .to(guide,{strokeDashoffset:0,duration:.28,ease:'none'})
+    // Complete the original artwork exactly, including fine details outside the guide.
+    .to(full,{opacity:1,duration:.02,ease:'none'})
+    .to(full,{opacity:1,duration:.40,ease:'none'})
+    .to(full,{opacity:0,duration:.02,ease:'none'})
+    .to(guide,{strokeDashoffset:length,duration:.28,ease:'none'});
 }
