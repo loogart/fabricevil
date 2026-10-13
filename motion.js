@@ -283,23 +283,36 @@ function setupDetailMotion() {
     const surface=card.querySelector('.shoutout-photo') || card;
     const portrait=surface.querySelector('img');
     if (surface.matches('.shoutout-photo') && portrait) surface.style.setProperty('--portrait-mask',`url("${portrait.getAttribute('src')}")`);
+    const state={x:0,y:0,depth:0,lift:0,scale:1};
+    let bounds;
+    const render=()=>{
+      card.style.setProperty('--tilt-x',String(-state.y || .001));
+      card.style.setProperty('--tilt-y',String(state.x));
+      card.style.setProperty('--tilt-angle',`${Math.hypot(state.x,state.y)*6}deg`);
+      card.style.setProperty('--hover-depth',`${state.depth}px`);
+      card.style.setProperty('--hover-lift',`${state.lift}px`);
+      card.style.setProperty('--hover-scale',String(state.scale));
+    };
+    const enter=()=>{bounds=card.getBoundingClientRect();};
     const reset=()=>{
-      card.style.setProperty('--tilt-angle','0deg');card.style.setProperty('--hover-depth','0px');
+      bounds=null;
+      gsap.to(state,{x:0,y:0,depth:0,lift:0,scale:1,duration:.5,ease:'power3.out',overwrite:true,onUpdate:render});
       surface.style.setProperty('--shine-opacity','0');
     };
     const move=event=>{
       if (!hover.matches) return;
-      const rect=card.getBoundingClientRect();
+      const rect=bounds || card.getBoundingClientRect();
       const x=Math.max(-1,Math.min(1,(event.clientX-rect.left)/rect.width*2-1));
       const y=Math.max(-1,Math.min(1,(event.clientY-rect.top)/rect.height*2-1));
-      card.style.setProperty('--tilt-x',String(-y || .001));card.style.setProperty('--tilt-y',String(x));
-      card.style.setProperty('--tilt-angle',`${Math.hypot(x,y)*4}deg`);
-      card.style.setProperty('--hover-depth','16px');
+      gsap.to(state,{x,y,depth:24,lift:5,scale:1.018,duration:.35,ease:'power3.out',overwrite:true,onUpdate:render});
       surface.style.setProperty('--shine-x',`${(x+1)*50}%`);surface.style.setProperty('--shine-y',`${(y+1)*50}%`);
       surface.style.setProperty('--shine-opacity','1');
     };
-    card.addEventListener('pointermove',move);card.addEventListener('pointerleave',reset);
-    removers.push(()=>{card.removeEventListener('pointermove',move);card.removeEventListener('pointerleave',reset);reset();});
+    card.addEventListener('pointerenter',enter);card.addEventListener('pointermove',move);card.addEventListener('pointerleave',reset);
+    removers.push(()=>{
+      card.removeEventListener('pointerenter',enter);card.removeEventListener('pointermove',move);card.removeEventListener('pointerleave',reset);
+      gsap.killTweensOf(state);Object.assign(state,{x:0,y:0,depth:0,lift:0,scale:1});render();surface.style.setProperty('--shine-opacity','0');
+    });
   }
   depthCleanup=()=>removers.forEach(remove=>remove());
   gsap.from('.reflection-photo',{

@@ -15,7 +15,7 @@
 
 /* Independent transform properties keep hover depth separate from entrance motion. */
 .works-collage,.media-stack,.shoutouts-people,.shoutouts-second-row,.shoutouts-initiatives { perspective:1000px; }
-.depth-card { rotate:var(--tilt-x,1) var(--tilt-y,0) 0 var(--tilt-angle,0deg); translate:0 0 var(--hover-depth,0px); transition:rotate .22s ease-out,translate .22s ease-out; position:relative; }
+.depth-card { rotate:var(--tilt-x,1) var(--tilt-y,0) 0 var(--tilt-angle,0deg); translate:0 0 var(--hover-depth,0px); scale:var(--hover-scale,1); position:relative; }
 .work-item-link { position:absolute; inset:0; z-index:5; }
 .work-item-link:focus-visible { outline:3px solid var(--ink); outline-offset:-4px; border-radius:4px; }
 @media(prefers-reduced-motion:no-preference) {
@@ -24,8 +24,33 @@
  .browser-slot.depth-card { animation-delay:-3.1s; }
  .collective-sheet.depth-card { animation-delay:-4.4s; }
 }
-@keyframes work-float { 0%,100% { translate:0 0 var(--hover-depth,0px); } 50% { translate:0 -4px var(--hover-depth,0px); } }
+@keyframes work-float { 0%,100% { translate:0 calc(-1 * var(--hover-lift,0px)) var(--hover-depth,0px); } 50% { translate:0 calc(-4px - var(--hover-lift,0px)) var(--hover-depth,0px); } }
 .shoutout-photo::after,.shoutout-logo::after { content:''; position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at var(--shine-x,50%) var(--shine-y,50%),#ffffff38,transparent 65%); opacity:var(--shine-opacity,0); transition:opacity .25s; }
 .shoutout-photo::after { mask-image:var(--portrait-mask); mask-size:cover; mask-position:center; }
 .motion-reduced .depth-card { animation:none; rotate:none; translate:none; }
 @media(prefers-reduced-motion:reduce) { .depth-card { animation:none; rotate:none; translate:none; } }
+
+.current-projects { position:absolute; top:10px; left:5%; right:5%; display:flex; justify-content:center; align-items:start; gap:34px; z-index:3; }
+.project-badge { display:flex; flex-direction:column; gap:10px; align-items:center; width:140px; text-decoration:none; color:var(--lime); font-size:15px; font-weight:600; text-align:center; }
+.project-badge img { width:112px; height:112px; object-fit:cover; border-radius:12px; box-shadow:0 5px 14px #0003; transition:scale .35s ease; }
+.project-badge:hover img,.project-badge:focus-visible img { scale:1.08; }
+.project-badge:hover { color:var(--lime); }
+.project-badge span { background:var(--ink); padding:5px 8px; border-radius:5px; }
+@media(prefers-reduced-motion:no-preference) { .project-badge { animation:project-float 7s ease-in-out infinite; }.podcast-badge { animation-delay:-3.5s; } }
+@keyframes project-float { 50% { translate:0 -6px; } }
+.project-mention { position:relative; font-weight:700; text-decoration-thickness:2px; }
+.project-preview { position:absolute; bottom:calc(100% + 12px); left:50%; translate:-50% 0; width:140px; padding:6px; background:white; border-radius:8px; box-shadow:0 6px 20px #0003; opacity:0; visibility:hidden; pointer-events:none; z-index:10; transition:opacity .2s; }
+.project-preview img { display:block; width:100%; height:auto; border-radius:3px; }
+.project-mention:hover .project-preview,.project-mention:focus-visible .project-preview { opacity:1; visibility:visible; }
+.dezod-feature { display:flex; align-items:center; gap:28px; max-width:680px; margin:0 0 44px; padding:16px; border:1px solid #254f4b33; background:#fff8; color:var(--ink); text-decoration:none; border-radius:4px; }
+.dezod-feature img { width:260px; max-width:45%; height:auto; }
+.dezod-feature small { display:block; font-size:14px; margin-bottom:8px; }
+.dezod-feature strong { font-size:21px; line-height:1.3; display:block; }
+.dezod-feature:hover { color:var(--ink); background:white; }
+@media(max-width:575px) { .current-projects { top:-5px; gap:18px; }.project-badge { width:120px; font-size:13px; }.project-badge img { width:86px; height:86px; }.dezod-feature { gap:16px; }.dezod-feature strong { font-size:17px; }.dezod-feature small { font-size:12px; } }
+@media(hover:none) { .project-preview { display:none; } }
+@media(prefers-reduced-motion:reduce) { .project-badge { animation:none; }.project-badge img { transition:none; } }
+.motion-reduced .project-badge { animation:none; }
+/* Keep the featured covers above the head as the layout stacks. */
+@media(max-width:991px) { .reflection-visual { height:650px; } }
+@media(max-width:575px) { .reflection-visual { height:450px; } }
