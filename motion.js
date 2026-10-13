@@ -1,6 +1,9 @@
 /* Edit motion settings here; the character artwork is never transformed. */
 const HERO_MOTION = { duration:2.2, delay:.18 };
 let heroHasPlayed=false;
+const STORY_MOTION = { enabled:true, typingStep:.085, entrance:.85, travel:18 };
+let greetingHasPlayed=false;
+let heroPaperHasPlayed=false;
 const LINE_MOTION = { enabled:true, draw:.60, hold:.20, erase:.20, smoothing:1.1 };
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const toggleButton = document.querySelector('#motion-toggle');
@@ -18,9 +21,11 @@ function configureMotion() {
   if (reduced) return;
   motionContext = gsap.context(() => {
     if (LINE_MOTION.enabled) setupHeroIntro();
+    if (STORY_MOTION.enabled) setupGreeting();
     if (window.ScrollTrigger && LINE_MOTION.enabled) {
       gsap.registerPlugin(ScrollTrigger);
       setupScrollLines();
+      if (STORY_MOTION.enabled) setupStoryMotion();
     }
   });
 }
@@ -122,4 +127,76 @@ function setupHeroIntro() {
   gsap.timeline({delay:HERO_MOTION.delay})
     .fromTo('.paper-accent',{clipPath:hidden},{clipPath:shown,duration:HERO_MOTION.duration,ease:'power1.inOut'},0)
     .fromTo('.rule-wrap',{clipPath:hidden},{clipPath:shown,duration:1.35,ease:'power1.inOut'},.3);
+}
+
+// A measured glyph reveal avoids changing line breaks or creating a span per letter.
+function typewriter(element, scroll=false, delay=0) {
+  if (!element) return;
+  let wrap=element.querySelector(':scope > .typewriter-wrap');
+  if (!wrap) {
+    const original=[...element.childNodes].find(n=>n.nodeType===Node.TEXT_NODE && n.textContent.trim());
+    if (!original) return;
+    const text=original.textContent;
+    element.setAttribute('aria-label',text.trim());
+    wrap=document.createElement('span');wrap.className='typewriter-wrap';wrap.setAttribute('aria-hidden','true');
+    const visual=document.createElement('span');visual.className='typewriter-visual';visual.textContent=text;
+    wrap.append(visual);
+    const accessible=document.createElement('span');accessible.className='visually-hidden';accessible.textContent=text;
+    original.replaceWith(accessible,wrap);
+    if (element.matches('.speech-bubble')) element.removeAttribute('aria-label');
+  }
+  const visual=wrap.firstElementChild,text=visual.firstChild;
+  const count=text.textContent.length,progress={letters:0};
+  const range=document.createRange();
+  gsap.set(visual,{clipPath:'inset(0 100% 0 0)'});
+  gsap.set(wrap,{'--typing-position':'0px','--typing-cursor':0});
+  const setClip=gsap.quickSetter(visual,'clipPath');
+  const setCaret=gsap.quickSetter(wrap,'--typing-position');
+  let last=-1;
+  const update=()=>{
+    const index=Math.round(progress.letters);
+    if (index===last) return;last=index;
+    range.setStart(text,0);range.setEnd(text,index);
+    const textRect=visual.getBoundingClientRect();
+    const width=index ? Math.max(0,range.getBoundingClientRect().right-textRect.left) : 0;
+    setClip(index===count ? 'inset(0 0 0 0)' : `inset(0 ${Math.max(0,textRect.width-width)}px 0 0)`);
+    setCaret(`${Math.min(width,textRect.width)}px`);
+  };
+  const timeline=gsap.timeline({delay,scrollTrigger:scroll ? {
+    trigger:element,start:'top 88%',toggleActions:'play none none reverse'
+  } : undefined});
+  timeline.set(wrap,{'--typing-cursor':1})
+    .to(progress,{letters:count,duration:count*STORY_MOTION.typingStep,ease:'none',snap:{letters:1},onUpdate:update})
+    .set(wrap,{'--typing-cursor':0});
+}
+function setupGreeting() {
+  if (greetingHasPlayed) return;
+  greetingHasPlayed=true;
+  typewriter(document.querySelector('.speech-bubble'),false,.45);
+}
+function setupStoryMotion() {
+  typewriter(document.querySelector('#about-title'),true);
+  typewriter(document.querySelector('#shoutouts-title'),true);
+
+  // Visual groups enter once while reading downward; scrolling back above them reverses.
+  for (const selector of ['.book-slot','.television-slot','.browser-slot','.logo-grid',
+    '.shoutouts-people','.shoutouts-second-row','.shoutouts-initiatives']) {
+    const element=document.querySelector(selector);
+    gsap.from(element,{
+      y:STORY_MOTION.travel,opacity:0,duration:STORY_MOTION.entrance,ease:'power2.out',
+      scrollTrigger:{trigger:element,start:'top 90%',toggleActions:'play none none reverse'}
+    });
+  }
+  for (const selector of ['.about-sheet','.collective-sheet','.contact-sheet']) {
+    const paper=document.querySelector(selector);
+    const rotation=Number(gsap.getProperty(paper,'rotation'));
+    gsap.fromTo(paper,{y:22,rotation:rotation-1.1,scale:.99},{
+      y:0,rotation,scale:1,duration:1.1,ease:'power2.out',
+      scrollTrigger:{trigger:paper,start:'top 92%',toggleActions:'play none none reverse'}
+    });
+  }
+  if (!heroPaperHasPlayed) {
+    heroPaperHasPlayed=true;
+    gsap.from('.hero-paper',{y:8,rotation:-.15,duration:1.05,ease:'power2.out'});
+  }
 }

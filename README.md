@@ -31,7 +31,7 @@ Browser checks at widths 320, 390, 768, 1024, 1440, and 1920 found no horizontal
 
 Mobile layouts adapt the provided desktop composition; no mobile Figma reference was supplied. Character animations remain pending. No CMS, analytics, or deployment has been added.
 
-Next approval gate: review reversible line motion before adding paper animations or publishing.
+Next approval gate: review the selective typography, element entrances, and paper settling before extending or publishing the motion system.
 
 Dependency documentation: https://getbootstrap.com/docs/5.3/ and https://gsap.com/docs/v3/Installation/
 
@@ -50,7 +50,7 @@ Shoutouts portrait refresh: all six portrait files now use the updated Figma ima
 
 The Livres et docus highlight, Réflexions doodle, Contact email highlight, and footer doodle/rule follow scroll position. They draw on section entry, remain visible through the middle of the section, and erase on exit. Scrolling in either direction reverses the same timeline. The hero highlighter and rule are the exception: they reveal automatically on page load, then remain drawn regardless of scrolling. Adjust HERO_MOTION for their timing. No animation is marked once-only. Adjust LINE_MOTION in motion.js for reveal/hold/erase proportions.
 
-Paper, card, and image entrance effects are held for the next approval pass. All art remains static and fully visible with reduced motion, including the original unmasked Réflexions doodle.
+Paper, card, and image entrances are now part of the Story motion exploration described below. All art remains static and fully visible with reduced motion, including the original unmasked Réflexions doodle.
 
 Scroll verification: entry, middle, exit, and reverse positions were checked on desktop and mobile. Five scroll timelines are active; manual reduced motion removes all five and restores complete artwork. The Contact email uses synchronized foreground clipping to stay readable during its marker reveal.
 
@@ -63,3 +63,12 @@ Scroll triggers now follow the actual heading, email marker, and Réflexions doo
 ## Browser and sharing assets
 
 The supplied images are installed without alteration: assets/favicon.png (64×64), assets/webclip.png (512×512), and assets/og-image.png (2400×1260). index.html declares the PNG favicon, Apple touch icon, and Open Graph/Twitter large-image metadata. Canonical and sharing URLs use https://fabricevil.com/. Public social previews become available when this version and its assets are deployed to that domain.
+
+
+## Story motion exploration
+
+Three short phrases use a typewriter-style glyph reveal: the hero greeting on load, À propos, and Shoutouts on entering the viewport. Full text stays in the layout, with complete accessible labels; no per-letter markup, looping cursor, or body-paragraph typing is used. A brief cursor appears only during typing.
+
+Book/TV/browser visuals, the collaborator grid, and the three Shoutouts groups enter with an 18px movement and soft opacity reveal. About, collective works, and Contact paper cards settle with a 1.1-degree adjustment toward their original tilt and a one-percent scale change. The hero sheet settles gently on load. Scrolling upward above the entry point reverses the viewport entrances.
+
+Adjust STORY_MOTION in motion.js, or set enabled to false to disable this exploration. Reduced-motion controls restore static cards and complete text. Existing line-reveal timings remain separate and unchanged. Character artwork is not animated or modified.

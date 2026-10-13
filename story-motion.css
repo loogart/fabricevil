@@ -1,0 +1,6 @@
+/* Full text stays in the layout while selected phrases are revealed. */
+.typewriter-wrap { display:inline-block; position:relative; vertical-align:top; max-width:100%; --typing-cursor:0; --typing-position:0px; }
+.typewriter-visual { display:block; }
+.typewriter-wrap::after { content:''; position:absolute; left:var(--typing-position); top:.1em; width:2px; height:.85em; background:currentColor; opacity:var(--typing-cursor); pointer-events:none; }
+@media(prefers-reduced-motion:reduce) { .typewriter-wrap::after { display:none; } }
+.motion-reduced .typewriter-wrap::after { display:none; }
