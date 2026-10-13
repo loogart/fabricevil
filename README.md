@@ -48,8 +48,8 @@ Shoutouts portrait refresh: all six portrait files now use the updated Figma ima
 
 ## Reversible scroll lines
 
-The hero highlighter and rule, Livres et docus highlight, Réflexions doodle, Contact email highlight, and footer doodle/rule follow scroll position. They draw on section entry, remain visible through the middle of the section, and erase on exit. Scrolling in either direction reverses the same timeline. The hero starts its timeline at the top of the page. No animation is marked once-only. Adjust LINE_MOTION in motion.js for reveal/hold/erase proportions.
+The Livres et docus highlight, Réflexions doodle, Contact email highlight, and footer doodle/rule follow scroll position. They draw on section entry, remain visible through the middle of the section, and erase on exit. Scrolling in either direction reverses the same timeline. The hero highlighter and rule are the exception: they reveal automatically on page load, then remain drawn regardless of scrolling. Adjust HERO_MOTION for their timing. No animation is marked once-only. Adjust LINE_MOTION in motion.js for reveal/hold/erase proportions.
 
 Paper, card, and image entrance effects are held for the next approval pass. All art remains static and fully visible with reduced motion, including the original unmasked Réflexions doodle.
 
-Scroll verification: entry, middle, exit, and reverse positions were checked on desktop and mobile. Seven timelines are active; manual reduced motion removes all seven and restores complete artwork. The Contact email uses synchronized foreground clipping to stay readable during its marker reveal.
+Scroll verification: entry, middle, exit, and reverse positions were checked on desktop and mobile. Five scroll timelines are active; manual reduced motion removes all five and restores complete artwork. The Contact email uses synchronized foreground clipping to stay readable during its marker reveal.
