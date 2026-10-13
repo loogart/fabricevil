@@ -87,3 +87,5 @@ Main prose now enters with a soft line-by-line fade instead of typing characters
 Visual entrances now travel 12px. Paper settling is quieter (half-percent scale, 0.4–0.65-degree tilt adjustment), with smaller movement on phones. Text and entrance timelines complete when quick navigation skips their viewport range, while upward exit still reverses them. Body fades receive a short pause to let heading cues lead. Existing scroll line timings are preserved.
 
 Mobile book framing keeps the original Figma crop proportions. The Contact email wraps at the @ boundary instead of splitting its domain; its original marker asset scales vertically to cover all wrapped lines while sharing the text reveal layer. Small-phone paperclip placement clears the title. Mobile navigation controls have at least 44px height.
+
+Hero H1: a short word-by-word fade and 8px rise plays once on load, alongside the existing hero lines. Native spaces retain responsive wrapping; a single accessible heading copy stays available. Reduced-motion preferences skip the entrance.

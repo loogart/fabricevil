@@ -4,6 +4,7 @@ let heroHasPlayed=false;
 const STORY_MOTION = { enabled:true, typingStep:.075, entrance:.75, travel:12 };
 let greetingHasPlayed=false;
 let heroPaperHasPlayed=false;
+let heroTitleHasPlayed=false;
 let bodyRevealCleanup;
 const LINE_MOTION = { enabled:true, draw:.60, hold:.20, erase:.20, smoothing:1.1 };
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -23,7 +24,7 @@ function configureMotion() {
   if (reduced) return;
   motionContext = gsap.context(() => {
     if (LINE_MOTION.enabled) setupHeroIntro();
-    if (STORY_MOTION.enabled) setupGreeting();
+    if (STORY_MOTION.enabled) { setupGreeting(); setupHeroTitle(); }
     if (window.ScrollTrigger && LINE_MOTION.enabled) {
       gsap.registerPlugin(ScrollTrigger);
       setupScrollLines();
@@ -165,6 +166,28 @@ function setupGreeting() {
   if (greetingHasPlayed) return;
   greetingHasPlayed=true;
   typewriter(document.querySelector('.speech-bubble'),false,.45);
+}
+// A quiet word-by-word entrance preserves the heading's native wrapping.
+function setupHeroTitle() {
+  if (heroTitleHasPlayed) return;
+  const heading=document.querySelector('#intro-title');
+  if (!heading) return;
+  heroTitleHasPlayed=true;
+  const text=heading.textContent;
+  const accessible=document.createElement('span');
+  accessible.className='visually-hidden';accessible.textContent=text;
+  const visual=document.createElement('span');
+  visual.setAttribute('aria-hidden','true');
+  for (const token of text.split(/(\s+)/)) {
+    if (!token) continue;
+    if (/^\s+$/.test(token)) { visual.append(document.createTextNode(token)); continue; }
+    const word=document.createElement('span');
+    word.className='hero-title-word';word.textContent=token;visual.append(word);
+  }
+  heading.replaceChildren(accessible,visual);
+  gsap.from(visual.querySelectorAll('.hero-title-word'),{
+    opacity:0,y:8,duration:.55,stagger:.055,delay:.18,ease:'power2.out'
+  });
 }
 function setupStoryMotion() {
   typewriter(document.querySelector('#about-title'),true);
