@@ -61,3 +61,27 @@ h1 { font-size:clamp(54px,5.56vw,88px); line-height:.9; font-weight:600; letter-
 }
 @media(max-width:420px) { .hero-inner { padding:0 20px; } .wordmark span:first-child { font-size:36px; } .wordmark span:last-child { font-size:34px; } h1 { font-size:43px; } .character-stage { height:365px; } .review-panel { padding:0 34px 55px; } }
 @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+
+/* Refined navbar scale, scoped separately from the footer branding. */
+.masthead { padding-top:50px; padding-bottom:32px; }
+.masthead .wordmark { width:220px; gap:14px; }
+.masthead .wordmark span:first-child { font-size:46px; }
+.masthead .wordmark span:last-child { font-size:42px; }
+.nav-preview ul { font-size:16px; gap:clamp(18px,2vw,30px); }
+@media(max-width:1250px) and (min-width:992px) {
+ .masthead .wordmark { width:190px; }
+ .masthead .wordmark span:first-child { font-size:40px; }
+ .masthead .wordmark span:last-child { font-size:37px; }
+ .nav-preview ul { font-size:14px; gap:18px; }
+}
+@media(max-width:991px) {
+ .masthead { padding-top:30px; padding-bottom:24px; }
+ .masthead .wordmark { width:auto; gap:11px; }
+ .masthead .wordmark span:first-child { font-size:36px; }
+ .masthead .wordmark span:last-child { font-size:33px; }
+ .mobile-menu,.mobile-nav:not([hidden]) { font-size:15px; }
+}
+@media(max-width:420px) {
+ .masthead .wordmark span:first-child { font-size:32px; }
+ .masthead .wordmark span:last-child { font-size:30px; }
+}
