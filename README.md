@@ -58,3 +58,8 @@ Scroll verification: entry, middle, exit, and reverse positions were checked on 
 ### Visible drawing timing
 
 Scroll triggers now follow the actual heading, email marker, and Réflexions doodle rather than their entire sections. Drawing begins when the mark reaches 85% of the viewport height and uses approximately 60% of its travel, with 1.1 seconds of smoothing. This keeps the reveal visible, particularly when the mobile Réflexions text precedes the doodle. Scroll reversal is retained. Footer marks finish at the bottom of the page and rewind when scrolling upward. The hero still plays automatically on load, now over 2.2 seconds, with a slower rule reveal.
+
+
+## Browser and sharing assets
+
+The supplied images are installed without alteration: assets/favicon.png (64×64), assets/webclip.png (512×512), and assets/og-image.png (2400×1260). index.html declares the PNG favicon, Apple touch icon, and Open Graph/Twitter large-image metadata. Canonical and sharing URLs use https://fabricevil.com/. Public social previews become available when this version and its assets are deployed to that domain.
