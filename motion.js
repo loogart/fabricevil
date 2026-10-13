@@ -74,22 +74,8 @@ function wipeLine(selector, trigger, footer=false) {
   if (!element || getComputedStyle(element).display==='none') return;
   const hidden='inset(0 100% 0 0)';
   const shown='inset(0 0% 0 0)';
-  const ink=selector==='.email-highlight' ? document.querySelector('.email-ink') : null;
-  let updateInk;
-  if (ink) {
-    gsap.set(ink,{clipPath:hidden});
-    const setClip=gsap.quickSetter(ink,'clipPath');
-    updateInk=()=>{
-      const clip=getComputedStyle(element).clipPath;
-      const percent=Number(clip.match(/inset\([^ ]+\s+([\d.]+)%/)?.[1] || 0);
-      const marker=element.getBoundingClientRect(),text=ink.getBoundingClientRect();
-      const edge=marker.left+marker.width*(1-percent/100);
-      const right=Math.max(0,Math.min(text.width,text.right-edge));
-      setClip(`inset(0 ${right}px 0 0)`);
-    };
-  }
+  // A single clip reveals the email marker and its contrasting text together.
   const timeline=lineTimeline(trigger,footer);
-  if (updateInk) timeline.eventCallback('onUpdate',updateInk);
   timeline
     .fromTo(element,{clipPath:hidden},{clipPath:shown,duration:LINE_MOTION.draw,ease:'none'})
     .to(element,{clipPath:shown,duration:LINE_MOTION.hold,ease:'none'});
@@ -98,7 +84,7 @@ function wipeLine(selector, trigger, footer=false) {
 }
 function setupScrollLines() {
   wipeLine('.heading-highlight','.works-heading');
-  wipeLine('.email-highlight','.contact-email');
+  wipeLine('.email-reveal','.contact-email');
   wipeLine('.footer-doodle','.footer-doodle',true);
   wipeLine('.footer-rule','.footer-rule',true);
 

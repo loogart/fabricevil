@@ -52,7 +52,7 @@ The Livres et docus highlight, Réflexions doodle, Contact email highlight, and 
 
 Paper, card, and image entrances are now part of the Story motion exploration described below. All art remains static and fully visible with reduced motion, including the original unmasked Réflexions doodle.
 
-Scroll verification: entry, middle, exit, and reverse positions were checked on desktop and mobile. Five scroll timelines are active; manual reduced motion removes all five and restores complete artwork. The Contact email uses synchronized foreground clipping to stay readable during its marker reveal.
+Scroll verification: entry, middle, exit, and reverse positions were checked on desktop and mobile. Five scroll timelines are active; manual reduced motion removes all five and restores complete artwork. The Contact email uses one shared reveal layer for its marker and dark text; a complete light-colored mailto link stays visible underneath.
 
 
 ### Visible drawing timing
@@ -72,3 +72,6 @@ Three short phrases use a typewriter-style glyph reveal: the hero greeting on lo
 Book/TV/browser visuals, the collaborator grid, and the three Shoutouts groups enter with an 18px movement and soft opacity reveal. About, collective works, and Contact paper cards settle with a 1.1-degree adjustment toward their original tilt and a one-percent scale change. The hero sheet settles gently on load. Scrolling upward above the entry point reverses the viewport entrances.
 
 Adjust STORY_MOTION in motion.js, or set enabled to false to disable this exploration. Reduced-motion controls restore static cards and complete text. Existing line-reveal timings remain separate and unchanged. Character artwork is not animated or modified.
+
+
+Contact reveal fix: removed per-frame viewport measurements and separate text clipping. A single email-reveal layer clips the original marker asset and its matching dark text together, with responsive padding in CSS. The underlying light text remains fully readable, clickable, and keyboard accessible at every scroll position. Card transforms and viewport resizing no longer require coordinating two masks.

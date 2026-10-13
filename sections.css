@@ -155,4 +155,10 @@ body.motion-reduced,body.motion-reduced * { scroll-behavior:auto !important; }
 
 /* Keep the email legible on both the green card and its moving lime marker. */
 .contact-email a { color:#e9e8e2; }
-.email-ink { position:absolute; inset:0; padding:inherit; color:var(--ink); pointer-events:none; }
+/* Both visual layers share one coordinate system, even while the card moves. */
+.contact-email { --email-bleed:20px; }
+.email-reveal { position:absolute; left:calc(-1 * var(--email-bleed)); right:calc(-1 * var(--email-bleed)); top:-70px; bottom:-70px; z-index:2; pointer-events:none; }
+.email-reveal .email-highlight { left:0; width:100%; }
+.email-ink { position:absolute; top:70px; left:var(--email-bleed); right:var(--email-bleed); padding:8px 0; color:var(--ink); font-size:var(--body-size); line-height:var(--body-leading); font-weight:500; overflow-wrap:anywhere; }
+.contact-email:focus-within::after { content:''; position:absolute; inset:0; outline:3px solid #e9e8e2; outline-offset:6px; z-index:3; pointer-events:none; }
+@media(max-width:575px) { .contact-email { --email-bleed:10px; } }
