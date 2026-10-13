@@ -12,3 +12,20 @@
 
 /* The hero types in words on load, resolving from a soft blur. */
 .hero-title-word { display:inline-block; }
+
+/* Independent transform properties keep hover depth separate from entrance motion. */
+.works-collage,.media-stack,.shoutouts-people,.shoutouts-second-row,.shoutouts-initiatives { perspective:1000px; }
+.depth-card { rotate:var(--tilt-x,1) var(--tilt-y,0) 0 var(--tilt-angle,0deg); translate:0 0 var(--hover-depth,0px); transition:rotate .22s ease-out,translate .22s ease-out; position:relative; }
+.work-item-link { position:absolute; inset:0; z-index:5; }
+.work-item-link:focus-visible { outline:3px solid var(--ink); outline-offset:-4px; border-radius:4px; }
+@media(prefers-reduced-motion:no-preference) {
+ .works-collage .depth-card { animation:work-float 5.8s ease-in-out infinite; }
+ .television-slot.depth-card { animation-delay:-1.4s; }
+ .browser-slot.depth-card { animation-delay:-3.1s; }
+ .collective-sheet.depth-card { animation-delay:-4.4s; }
+}
+@keyframes work-float { 0%,100% { translate:0 0 var(--hover-depth,0px); } 50% { translate:0 -4px var(--hover-depth,0px); } }
+.shoutout-photo::after,.shoutout-logo::after { content:''; position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at var(--shine-x,50%) var(--shine-y,50%),#ffffff38,transparent 65%); opacity:var(--shine-opacity,0); transition:opacity .25s; }
+.shoutout-photo::after { mask-image:var(--portrait-mask); mask-size:cover; mask-position:center; }
+.motion-reduced .depth-card { animation:none; rotate:none; translate:none; }
+@media(prefers-reduced-motion:reduce) { .depth-card { animation:none; rotate:none; translate:none; } }

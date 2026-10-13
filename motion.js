@@ -6,6 +6,7 @@ let greetingHasPlayed=false;
 let heroPaperHasPlayed=false;
 let heroTitleHasPlayed=false;
 let bodyRevealCleanup;
+let depthCleanup;
 const LINE_MOTION = { enabled:true, draw:.60, hold:.20, erase:.20, smoothing:1.1 };
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const toggleButton = document.querySelector('#motion-toggle');
@@ -13,6 +14,7 @@ const status = document.querySelector('#motion-status');
 let manuallyReduced = false;
 let motionContext;
 function configureMotion() {
+  depthCleanup?.();
   bodyRevealCleanup?.();
   motionContext?.revert();
   const reduced = reducedMotion.matches || manuallyReduced;
@@ -28,7 +30,7 @@ function configureMotion() {
     if (window.ScrollTrigger && LINE_MOTION.enabled) {
       gsap.registerPlugin(ScrollTrigger);
       setupScrollLines();
-      if (STORY_MOTION.enabled) setupStoryMotion();
+      if (STORY_MOTION.enabled) { setupStoryMotion(); setupDetailMotion(); }
     }
   });
 }
@@ -269,4 +271,43 @@ function setupBodyLines() {
     });
   }
   return ()=>{active=false;observer.disconnect();renders.clear();};
+}
+
+// Pointer depth uses independent CSS rotation, preserving the original artwork and tilt.
+function setupDetailMotion() {
+  const hover=window.matchMedia('(hover:hover) and (pointer:fine)');
+  const cards=[...document.querySelectorAll('.book-slot,.television-slot,.browser-slot,.collective-sheet,.shoutout-card,.shoutout-logo')];
+  const removers=[];
+  for (const card of cards) {
+    card.classList.add('depth-card');
+    const surface=card.querySelector('.shoutout-photo') || card;
+    const portrait=surface.querySelector('img');
+    if (surface.matches('.shoutout-photo') && portrait) surface.style.setProperty('--portrait-mask',`url("${portrait.getAttribute('src')}")`);
+    const reset=()=>{
+      card.style.setProperty('--tilt-angle','0deg');card.style.setProperty('--hover-depth','0px');
+      surface.style.setProperty('--shine-opacity','0');
+    };
+    const move=event=>{
+      if (!hover.matches) return;
+      const rect=card.getBoundingClientRect();
+      const x=Math.max(-1,Math.min(1,(event.clientX-rect.left)/rect.width*2-1));
+      const y=Math.max(-1,Math.min(1,(event.clientY-rect.top)/rect.height*2-1));
+      card.style.setProperty('--tilt-x',String(-y || .001));card.style.setProperty('--tilt-y',String(x));
+      card.style.setProperty('--tilt-angle',`${Math.hypot(x,y)*4}deg`);
+      card.style.setProperty('--hover-depth','16px');
+      surface.style.setProperty('--shine-x',`${(x+1)*50}%`);surface.style.setProperty('--shine-y',`${(y+1)*50}%`);
+      surface.style.setProperty('--shine-opacity','1');
+    };
+    card.addEventListener('pointermove',move);card.addEventListener('pointerleave',reset);
+    removers.push(()=>{card.removeEventListener('pointermove',move);card.removeEventListener('pointerleave',reset);reset();});
+  }
+  depthCleanup=()=>removers.forEach(remove=>remove());
+  gsap.from('.reflection-photo',{
+    yPercent:65,opacity:0,duration:1.1,ease:'power3.out',
+    scrollTrigger:{trigger:'.reflection-photo',start:'top 92%',toggleActions:'play complete play reverse'}
+  });
+  gsap.fromTo('.contact-paperclip',{rotation:-105},{
+    rotation:-58.87,duration:1,ease:'power3.out',
+    scrollTrigger:{trigger:'.contact-paperclip',start:'top 90%',end:'bottom top',toggleActions:'play reverse play reverse'}
+  });
 }
