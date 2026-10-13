@@ -1,0 +1,50 @@
+/* Shoutouts: the green grid and original portraits come directly from Figma. */
+.shoutouts { position:relative; background:#006461; color:white; overflow:hidden; padding:105px 0; }
+.shoutouts::before { content:''; position:absolute; inset:-15% -15%; background:url('assets/shoutouts-grid.png') center/cover no-repeat; transform:rotate(2.46deg); pointer-events:none; }
+.shoutouts-inner { position:relative; display:grid; grid-template-columns:minmax(0,.38fr) minmax(0,.62fr); align-items:center; gap:30px; }
+.shoutouts-copy h2 { color:var(--lime); margin-bottom:20px; line-height:1; }
+.shoutouts-copy p { font-size:var(--body-size); line-height:var(--body-leading); font-weight:500; margin:0; max-width:45ch; }
+.shoutouts-gallery { min-width:0; max-width:712px; width:100%; margin:auto; }
+.shoutouts-people { display:grid; grid-template-columns:151fr 195fr 158fr 158fr; align-items:end; gap:13px; }
+.shoutout-card { display:flex; flex-direction:column; align-items:center; gap:17px; text-decoration:none; min-width:0; color:var(--lime); }
+.shoutout-photo { width:100%; position:relative; }
+.shoutout-photo img { display:block; position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; }
+.shoutout-name { font-size:18px; font-weight:700; line-height:1.3; text-align:center; margin:0; min-height:2.6em; }
+.shoutout-card:hover { color:var(--lime); }
+.shoutout-card:hover .shoutout-name { text-decoration:underline; text-underline-offset:4px; }
+.shoutout-card:focus-visible,.shoutout-logo:focus-visible { outline-color:var(--lime); }
+.shoutouts-second-row { display:grid; grid-template-columns:190fr 475fr; align-items:end; gap:44px; margin-top:40px; }
+.shoutout-photo.bayo { overflow:hidden; }
+.shoutouts-initiatives { display:flex; justify-content:center; align-items:center; gap:40px; margin-top:36px; }
+.shoutout-logo { display:block; position:relative; width:94px; height:94px; flex-shrink:0; border-radius:50%; background:white; overflow:hidden; }
+.shoutout-logo:hover { outline:2px solid var(--lime); outline-offset:5px; }
+.maktaba-crop { position:absolute; left:13.21%; top:4.6%; width:73.58%; height:79.73%; overflow:hidden; }
+.maktaba-crop img { position:absolute; left:-27.23%; top:-11.71%; width:154.46%; height:142.53%; max-width:none; object-fit:fill; }
+.ecologies-crop { position:absolute; left:13.09%; top:13.86%; width:321.93%; height:72.26%; }
+.ecologies-crop img { display:block; width:100%; height:100%; max-width:none; object-fit:fill; }
+.larue-crop { position:absolute; left:16.84%; top:25.45%; width:65.99%; height:23.5%; overflow:hidden; }
+.larue-crop img { position:absolute; left:-46.11%; top:-377.87%; width:304.08%; height:853.88%; max-width:none; object-fit:fill; }
+.larue-crop.second { left:11.89%; top:50%; width:76.23%; }
+.larue-crop.second img { left:-125.44%; width:263.25%; }
+@media(max-width:1250px) and (min-width:992px) {
+ .shoutouts-inner { grid-template-columns:minmax(0,.33fr) minmax(0,.67fr); gap:30px; }
+ .shoutouts-copy h2 { font-size:50px; }
+ .shoutouts-people { gap:12px; }.shoutout-name { font-size:16px; }
+ .shoutouts-second-row { gap:28px; }
+}
+@media(max-width:991px) {
+ .shoutouts { padding:70px 0; }
+ .shoutouts-inner { grid-template-columns:1fr; gap:55px; }
+ .shoutouts-copy { max-width:650px; }.shoutouts-copy p { max-width:60ch; }
+ .shoutouts-gallery { max-width:650px; }
+}
+@media(max-width:575px) {
+ .shoutouts { padding:55px 0; }.shoutouts-copy h2 { font-size:44px; }
+ .shoutouts-inner { gap:40px; }.shoutouts-people { grid-template-columns:1fr 1fr; gap:28px 24px; }
+ .shoutout-name { font-size:18px; }.shoutout-card { gap:14px; }
+ .shoutouts-second-row { grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:24px; margin-top:28px; }
+ .shoutouts-second-row .shoutout-name { font-size:16px; }
+ .shoutouts-initiatives { gap:22px; margin-top:28px; }
+ .shoutout-logo { width:76px; height:76px; }
+}
+@media(max-width:360px) { .shoutouts-initiatives { gap:16px; }.shoutout-logo { width:68px; height:68px; } }
