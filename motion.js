@@ -14,8 +14,8 @@ function configureMotion() {
   motionContext?.revert();
   const reduced = reducedMotion.matches || manuallyReduced;
   document.body.classList.toggle('motion-reduced',reduced);
-  toggleButton.setAttribute('aria-pressed', String(reduced));
-  toggleButton.textContent = reduced ? 'Mouvement réduit' : 'Réduire le mouvement';
+  toggleButton?.setAttribute('aria-pressed', String(reduced));
+  if (toggleButton) toggleButton.textContent = reduced ? 'Mouvement réduit' : 'Réduire le mouvement';
   status.textContent = reduced ? 'Les animations sont désactivées.' : 'Les animations sont activées.';
   if (!window.gsap) { status.textContent = 'Animation indisponible. Le visuel reste affiché.'; return; }
   if (reduced) return;
@@ -29,7 +29,7 @@ function configureMotion() {
     }
   });
 }
-toggleButton.addEventListener('click', () => {
+toggleButton?.addEventListener('click', () => {
   if (reducedMotion.matches) { status.textContent = 'La préférence de mouvement réduit de votre appareil est respectée.'; return; }
   manuallyReduced = !manuallyReduced;
   configureMotion();
