@@ -80,3 +80,10 @@ Contact reveal fix: removed per-frame viewport measurements and separate text cl
 ### Body line reveals
 
 Main prose now enters with a soft line-by-line fade instead of typing characters. Paragraphs and links retain their original DOM, dimensions, and line wrapping; CSS mask bands reveal natural lines with a short stagger. ResizeObserver recalculates the bands for responsive wrapping. Finished paragraphs are unmasked, and both reduced-motion modes display all text immediately. The Contact email keeps its separate shared marker reveal.
+
+
+## Pacing and mobile polish
+
+Visual entrances now travel 12px. Paper settling is quieter (half-percent scale, 0.4–0.65-degree tilt adjustment), with smaller movement on phones. Text and entrance timelines complete when quick navigation skips their viewport range, while upward exit still reverses them. Body fades receive a short pause to let heading cues lead. Existing scroll line timings are preserved.
+
+Mobile book framing keeps the original Figma crop proportions. The Contact email wraps at the @ boundary instead of splitting its domain; its original marker asset scales vertically to cover all wrapped lines while sharing the text reveal layer. Small-phone paperclip placement clears the title. Mobile navigation controls have at least 44px height.

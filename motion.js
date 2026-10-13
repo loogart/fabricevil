@@ -1,7 +1,7 @@
 /* Edit motion settings here; the character artwork is never transformed. */
 const HERO_MOTION = { duration:2.2, delay:.18 };
 let heroHasPlayed=false;
-const STORY_MOTION = { enabled:true, typingStep:.085, entrance:.85, travel:18 };
+const STORY_MOTION = { enabled:true, typingStep:.075, entrance:.75, travel:12 };
 let greetingHasPlayed=false;
 let heroPaperHasPlayed=false;
 let bodyRevealCleanup;
@@ -50,7 +50,11 @@ configureMotion();
 const svgObserver = new ResizeObserver(entries => {
   for (const {target} of entries) {
     const img=target.querySelector(':scope > img, :scope > svg');
-    if (img) img.style.transform=`scale(${target.clientWidth / Number(img.getAttribute('width'))})`;
+    if (img) {
+      const x=target.clientWidth/Number(img.getAttribute('width'));
+      const y=target.closest('.email-highlight') ? target.clientHeight/Number(img.getAttribute('height')) : x;
+      img.style.transform=`scale(${x},${y})`;
+    }
   }
 });
 document.querySelectorAll('.svg-fit').forEach(el=>svgObserver.observe(el));
@@ -151,7 +155,7 @@ function typewriter(element, scroll=false, delay=0) {
     setCaret(`${Math.min(width,textRect.width)}px`);
   };
   const timeline=gsap.timeline({delay,scrollTrigger:scroll ? {
-    trigger:element,start:'top 88%',toggleActions:'play none none reverse'
+    trigger:element,start:'top 88%',toggleActions:'play complete play reverse'
   } : undefined});
   timeline.set(wrap,{'--typing-cursor':1})
     .to(progress,{letters:count,duration:count*STORY_MOTION.typingStep,ease:'none',snap:{letters:1},onUpdate:update})
@@ -175,15 +179,16 @@ function setupStoryMotion() {
     const element=document.querySelector(selector);
     gsap.from(element,{
       y:STORY_MOTION.travel,opacity:0,duration:STORY_MOTION.entrance,ease:'power2.out',
-      scrollTrigger:{trigger:element,start:'top 90%',toggleActions:'play none none reverse'}
+      scrollTrigger:{trigger:element,start:'top 90%',toggleActions:'play complete play reverse'}
     });
   }
   for (const selector of ['.about-sheet','.collective-sheet','.contact-sheet']) {
     const paper=document.querySelector(selector);
-    const rotation=Number(gsap.getProperty(paper,'rotation'));
-    gsap.fromTo(paper,{y:22,rotation:rotation-1.1,scale:.99},{
-      y:0,rotation,scale:1,duration:1.1,ease:'power2.out',
-      scrollTrigger:{trigger:paper,start:'top 92%',toggleActions:'play none none reverse'}
+    const narrow=()=>window.matchMedia('(max-width:575px)').matches;
+    const rotation=()=>selector==='.about-sheet' ? 1.13 : selector==='.collective-sheet' ? (window.matchMedia('(max-width:991px)').matches ? 2 : 4.93) : 0;
+    gsap.fromTo(paper,{y:()=>narrow()?12:18,rotation:()=>rotation()-(narrow()?.4:.65),scale:.995},{
+      y:0,rotation,scale:1,duration:.9,ease:'power2.out',
+      scrollTrigger:{trigger:paper,start:'top 92%',toggleActions:'play complete play reverse',invalidateOnRefresh:true}
     });
   }
   if (!heroPaperHasPlayed) {
@@ -228,7 +233,7 @@ function setupBodyLines() {
     };
     measure();render();renders.set(paragraph,render);observer.observe(paragraph);
     const hero=paragraph.matches('.intro-copy p');
-    gsap.to(state,{progress:1,duration:Math.min(1.35,.5+(count-1)*.11),ease:'none',delay:hero?.8:0,onUpdate:render,
+    gsap.to(state,{progress:1,duration:Math.min(1.35,.5+(count-1)*.11),ease:'none',delay:hero?.8:.12,onUpdate:render,
       scrollTrigger:hero ? undefined : {trigger:paragraph,start:'top 92%',toggleActions:'play complete play reverse',onRefresh:render}
     });
   }

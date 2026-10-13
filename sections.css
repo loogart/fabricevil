@@ -162,3 +162,22 @@ body.motion-reduced,body.motion-reduced * { scroll-behavior:auto !important; }
 .email-ink { position:absolute; top:70px; left:var(--email-bleed); right:var(--email-bleed); padding:8px 0; color:var(--ink); font-size:var(--body-size); line-height:var(--body-leading); font-weight:500; overflow-wrap:anywhere; }
 .contact-email:focus-within::after { content:''; position:absolute; inset:0; outline:3px solid #e9e8e2; outline-offset:6px; z-index:3; pointer-events:none; }
 @media(max-width:575px) { .contact-email { --email-bleed:10px; } }
+
+/* Mobile polish: keep the address intact and let the marker fit wrapped text. */
+.email-user,.email-domain { white-space:nowrap; }
+.email-reveal .email-highlight { height:calc(100% - 108px); }
+.email-reveal .email-highlight .svg-fit { height:100%; aspect-ratio:auto !important; }
+@media(max-width:991px) {
+ .mobile-menu { min-height:44px; min-width:60px; }
+ .mobile-nav a { min-height:44px; display:flex; align-items:center; }
+ .mobile-nav ul { gap:4px; }
+}
+@media(max-width:575px) {
+ .book-slot { height:auto; aspect-ratio:527.188/448.855; }
+ .contact-paperclip { width:108px; height:27.603px; top:20px; right:-16px; }
+}
+@media(max-width:360px) {
+ .masthead { gap:18px; }
+ .contact-sheet { padding-left:22px; padding-right:22px; }
+ .contact-paperclip { width:78px; height:19.936px; top:15px; right:-12px; }
+}
