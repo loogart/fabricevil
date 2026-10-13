@@ -54,3 +54,17 @@
 /* Keep the featured covers above the head as the layout stacks. */
 @media(max-width:991px) { .reflection-visual { height:650px; } }
 @media(max-width:575px) { .reflection-visual { height:450px; } }
+
+/* Local paper prototype: the bottom half opens around a horizontal crease. */
+.collective-sheet { perspective:900px; }
+.collective-content { position:relative; z-index:1; }
+.paper-fold { display:none; position:absolute; top:50%; left:0; width:100%; height:50%; transform-origin:center top; background:linear-gradient(to bottom,#514c3533,transparent 28%),url('assets/paper-grid.png') center/cover; box-shadow:0 -3px 7px #0002; pointer-events:none; z-index:2; }
+.collective-sheet:focus-within { clip-path:none !important; }
+.collective-sheet:focus-within .collective-content { opacity:1 !important; }
+.collective-sheet:focus-within .paper-fold,.motion-reduced .paper-fold { display:none !important; }
+@media(prefers-reduced-motion:reduce) { .paper-fold { display:none !important; } }
+
+/* During unfolding only the fixed top half sits behind the hinged bottom half. */
+.paper-base { display:none; position:absolute; inset:0; background:url('assets/paper-grid.png') center/cover; pointer-events:none; }
+.paper-fold { background-size:100% 100%,100% 200%; background-position:center,bottom center; }
+.collective-sheet:focus-within .paper-base { clip-path:none !important; }
