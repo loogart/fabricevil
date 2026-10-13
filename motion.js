@@ -1,7 +1,7 @@
 /* Edit motion settings here; the character artwork is never transformed. */
-const HERO_MOTION = { duration:1.1, delay:.12 };
+const HERO_MOTION = { duration:2.2, delay:.18 };
 let heroHasPlayed=false;
-const LINE_MOTION = { enabled:true, draw:.28, hold:.44, erase:.28 };
+const LINE_MOTION = { enabled:true, draw:.60, hold:.20, erase:.20, smoothing:1.1 };
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const toggleButton = document.querySelector('#motion-toggle');
 const status = document.querySelector('#motion-status');
@@ -55,18 +55,18 @@ document.querySelectorAll('#mobile-nav a').forEach(link=>link.addEventListener('
 
 // Lines draw on entry, hold while the section is in view, and erase on exit.
 // Every frame is controlled by scroll position, including when scrolling backward.
-function lineTimeline(trigger) {
+function lineTimeline(trigger, footer=false) {
   return gsap.timeline({scrollTrigger:{
     trigger,
-    start:'top bottom',
-    end:'bottom top',
-    scrub:true,
+    start:footer ? 'clamp(top 95%)' : 'top 85%',
+    end:footer ? 'max' : 'bottom top',
+    scrub:LINE_MOTION.smoothing,
     invalidateOnRefresh:true
   }});
 }
-function wipeLine(selector, trigger) {
+function wipeLine(selector, trigger, footer=false) {
   const element=document.querySelector(selector);
-  if (!element) return;
+  if (!element || getComputedStyle(element).display==='none') return;
   const hidden='inset(0 100% 0 0)';
   const shown='inset(0 0% 0 0)';
   const ink=selector==='.email-highlight' ? document.querySelector('.email-ink') : null;
@@ -83,18 +83,19 @@ function wipeLine(selector, trigger) {
       setClip(`inset(0 ${right}px 0 0)`);
     };
   }
-  const timeline=lineTimeline(trigger);
+  const timeline=lineTimeline(trigger,footer);
   if (updateInk) timeline.eventCallback('onUpdate',updateInk);
   timeline
     .fromTo(element,{clipPath:hidden},{clipPath:shown,duration:LINE_MOTION.draw,ease:'none'})
-    .to(element,{clipPath:shown,duration:LINE_MOTION.hold,ease:'none'})
-    .to(element,{clipPath:hidden,duration:LINE_MOTION.erase,ease:'none'});
+    .to(element,{clipPath:shown,duration:LINE_MOTION.hold,ease:'none'});
+  // At the page bottom, rewind on upward scrolling without erasing the final view.
+  if (!footer) timeline.to(element,{clipPath:hidden,duration:LINE_MOTION.erase,ease:'none'});
 }
 function setupScrollLines() {
-  wipeLine('.heading-highlight','#oeuvres');
-  wipeLine('.email-highlight','#contact');
-  wipeLine('.footer-doodle','.site-footer');
-  wipeLine('.footer-rule','.site-footer');
+  wipeLine('.heading-highlight','.works-heading');
+  wipeLine('.email-highlight','.contact-email');
+  wipeLine('.footer-doodle','.footer-doodle',true);
+  wipeLine('.footer-rule','.footer-rule',true);
 
   const guide=document.querySelector('#reflection-ink-guide');
   const art=document.querySelector('#reflection-ink-art');
@@ -103,13 +104,13 @@ function setupScrollLines() {
   gsap.set(art,{attr:{mask:'url(#reflection-ink-mask)'}});
   gsap.set(full,{opacity:0});
   gsap.set(guide,{strokeDasharray:length,strokeDashoffset:length});
-  lineTimeline('#reflexions')
-    .to(guide,{strokeDashoffset:0,duration:.28,ease:'none'})
+  lineTimeline('.reflection-doodle')
+    .to(guide,{strokeDashoffset:0,duration:.58,ease:'none'})
     // Complete the original artwork exactly, including fine details outside the guide.
     .to(full,{opacity:1,duration:.02,ease:'none'})
-    .to(full,{opacity:1,duration:.40,ease:'none'})
+    .to(full,{opacity:1,duration:.18,ease:'none'})
     .to(full,{opacity:0,duration:.02,ease:'none'})
-    .to(guide,{strokeDashoffset:length,duration:.28,ease:'none'});
+    .to(guide,{strokeDashoffset:length,duration:.20,ease:'none'});
 }
 
 // The first-screen lines play once without requiring a scroll gesture.
@@ -119,6 +120,6 @@ function setupHeroIntro() {
   const hidden='inset(0 100% 0 0)';
   const shown='inset(0 0% 0 0)';
   gsap.timeline({delay:HERO_MOTION.delay})
-    .fromTo('.paper-accent',{clipPath:hidden},{clipPath:shown,duration:HERO_MOTION.duration,ease:'power1.out'},0)
-    .fromTo('.rule-wrap',{clipPath:hidden},{clipPath:shown,duration:.65,ease:'power1.out'},.2);
+    .fromTo('.paper-accent',{clipPath:hidden},{clipPath:shown,duration:HERO_MOTION.duration,ease:'power1.inOut'},0)
+    .fromTo('.rule-wrap',{clipPath:hidden},{clipPath:shown,duration:1.35,ease:'power1.inOut'},.3);
 }

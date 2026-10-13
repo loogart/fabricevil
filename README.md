@@ -53,3 +53,8 @@ The Livres et docus highlight, Réflexions doodle, Contact email highlight, and 
 Paper, card, and image entrance effects are held for the next approval pass. All art remains static and fully visible with reduced motion, including the original unmasked Réflexions doodle.
 
 Scroll verification: entry, middle, exit, and reverse positions were checked on desktop and mobile. Five scroll timelines are active; manual reduced motion removes all five and restores complete artwork. The Contact email uses synchronized foreground clipping to stay readable during its marker reveal.
+
+
+### Visible drawing timing
+
+Scroll triggers now follow the actual heading, email marker, and Réflexions doodle rather than their entire sections. Drawing begins when the mark reaches 85% of the viewport height and uses approximately 60% of its travel, with 1.1 seconds of smoothing. This keeps the reveal visible, particularly when the mobile Réflexions text precedes the doodle. Scroll reversal is retained. Footer marks finish at the bottom of the page and rewind when scrolling upward. The hero still plays automatically on load, now over 2.2 seconds, with a slower rule reveal.
