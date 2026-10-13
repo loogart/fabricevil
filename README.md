@@ -67,7 +67,7 @@ The supplied images are installed without alteration: assets/favicon.png (64×64
 
 ## Story motion exploration
 
-Three short phrases use a typewriter-style glyph reveal: the hero greeting on load, À propos, and Shoutouts on entering the viewport. Full text stays in the layout, with complete accessible labels; no per-letter markup, looping cursor, or body-paragraph typing is used. A brief cursor appears only during typing.
+Five short phrases use a typewriter-style glyph reveal: the hero greeting on load, À propos, Réflexions, Shoutouts, and Contact on entering the viewport. Full text stays in the layout, with complete accessible labels; no per-letter markup, looping cursor, or body-paragraph typing is used. A brief cursor appears only during typing.
 
 Book/TV/browser visuals, the collaborator grid, and the three Shoutouts groups enter with an 18px movement and soft opacity reveal. About, collective works, and Contact paper cards settle with a 1.1-degree adjustment toward their original tilt and a one-percent scale change. The hero sheet settles gently on load. Scrolling upward above the entry point reverses the viewport entrances.
 
@@ -75,3 +75,8 @@ Adjust STORY_MOTION in motion.js, or set enabled to false to disable this explor
 
 
 Contact reveal fix: removed per-frame viewport measurements and separate text clipping. A single email-reveal layer clips the original marker asset and its matching dark text together, with responsive padding in CSS. The underlying light text remains fully readable, clickable, and keyboard accessible at every scroll position. Card transforms and viewport resizing no longer require coordinating two masks.
+
+
+### Body line reveals
+
+Main prose now enters with a soft line-by-line fade instead of typing characters. Paragraphs and links retain their original DOM, dimensions, and line wrapping; CSS mask bands reveal natural lines with a short stagger. ResizeObserver recalculates the bands for responsive wrapping. Finished paragraphs are unmasked, and both reduced-motion modes display all text immediately. The Contact email keeps its separate shared marker reveal.

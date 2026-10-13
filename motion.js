@@ -4,6 +4,7 @@ let heroHasPlayed=false;
 const STORY_MOTION = { enabled:true, typingStep:.085, entrance:.85, travel:18 };
 let greetingHasPlayed=false;
 let heroPaperHasPlayed=false;
+let bodyRevealCleanup;
 const LINE_MOTION = { enabled:true, draw:.60, hold:.20, erase:.20, smoothing:1.1 };
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const toggleButton = document.querySelector('#motion-toggle');
@@ -11,6 +12,7 @@ const status = document.querySelector('#motion-status');
 let manuallyReduced = false;
 let motionContext;
 function configureMotion() {
+  bodyRevealCleanup?.();
   motionContext?.revert();
   const reduced = reducedMotion.matches || manuallyReduced;
   document.body.classList.toggle('motion-reduced',reduced);
@@ -163,6 +165,9 @@ function setupGreeting() {
 function setupStoryMotion() {
   typewriter(document.querySelector('#about-title'),true);
   typewriter(document.querySelector('#shoutouts-title'),true);
+  typewriter(document.querySelector('#reflections-title'),true);
+  typewriter(document.querySelector('#contact-title'),true);
+  bodyRevealCleanup=setupBodyLines();
 
   // Visual groups enter once while reading downward; scrolling back above them reverses.
   for (const selector of ['.book-slot','.television-slot','.browser-slot','.logo-grid',
@@ -185,4 +190,47 @@ function setupStoryMotion() {
     heroPaperHasPlayed=true;
     gsap.from('.hero-paper',{y:8,rotation:-.15,duration:1.05,ease:'power2.out'});
   }
+}
+
+// Reveal existing line boxes without splitting paragraphs or their links into copies.
+function setupBodyLines() {
+  const renders=new Map();let active=true;
+  const observer=new ResizeObserver(entries=>{
+    if (active) for (const {target} of entries) renders.get(target)?.();
+  });
+  const paragraphs=document.querySelectorAll('.intro-copy p,.about-copy p,.works-intro,.reflections-copy p,.experience-copy p,.shoutouts-copy p,.contact-sheet > p');
+  for (const paragraph of paragraphs) {
+    paragraph.classList.add('body-line-reveal');
+    const state={progress:0};
+    gsap.set(paragraph,{maskImage:'none',webkitMaskImage:'none',maskRepeat:'no-repeat',webkitMaskRepeat:'no-repeat',maskSize:'auto',webkitMaskSize:'auto',maskPosition:'0 0',webkitMaskPosition:'0 0'});
+    const image=gsap.quickSetter(paragraph,'maskImage');
+    const position=gsap.quickSetter(paragraph,'maskPosition');
+    const size=gsap.quickSetter(paragraph,'maskSize');
+    let count=1,lineHeight=30;
+    const measure=()=>{
+      lineHeight=parseFloat(getComputedStyle(paragraph).lineHeight);
+      count=Math.max(1,Math.round(paragraph.clientHeight/lineHeight));
+    };
+    const render=()=>{
+      if (!active) return;
+      measure();
+      if (state.progress>=.9999) { image('none');return; }
+      const gradients=[],positions=[],sizes=[];
+      const travel=1+(count-1)*.22;
+      for (let i=0;i<count;i++) {
+        const alpha=Math.max(0,Math.min(1,state.progress*travel-i*.22));
+        const color=`rgba(0,0,0,${alpha.toFixed(4)})`;
+        gradients.push(`linear-gradient(${color},${color})`);
+        positions.push(`0 ${i*lineHeight}px`);
+        sizes.push(`100% ${lineHeight+.1}px`);
+      }
+      image(gradients.join(','));position(positions.join(','));size(sizes.join(','));
+    };
+    measure();render();renders.set(paragraph,render);observer.observe(paragraph);
+    const hero=paragraph.matches('.intro-copy p');
+    gsap.to(state,{progress:1,duration:Math.min(1.35,.5+(count-1)*.11),ease:'none',delay:hero?.8:0,onUpdate:render,
+      scrollTrigger:hero ? undefined : {trigger:paragraph,start:'top 92%',toggleActions:'play complete play reverse',onRefresh:render}
+    });
+  }
+  return ()=>{active=false;observer.disconnect();renders.clear();};
 }

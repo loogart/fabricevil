@@ -4,3 +4,8 @@
 .typewriter-wrap::after { content:''; position:absolute; left:var(--typing-position); top:.1em; width:2px; height:.85em; background:currentColor; opacity:var(--typing-cursor); pointer-events:none; }
 @media(prefers-reduced-motion:reduce) { .typewriter-wrap::after { display:none; } }
 .motion-reduced .typewriter-wrap::after { display:none; }
+
+/* No text duplication or reflow: line bands only change the visibility of native prose. */
+.body-line-reveal { mask-repeat:no-repeat; -webkit-mask-repeat:no-repeat; }
+.motion-reduced .body-line-reveal { mask-image:none !important; -webkit-mask-image:none !important; }
+@media(prefers-reduced-motion:reduce) { .body-line-reveal { mask-image:none !important; -webkit-mask-image:none !important; } }
