@@ -203,24 +203,7 @@ function setupStoryMotion() {
   bodyRevealCleanup=setupBodyLines();
   setupPaperUnfold();
 
-  // Visual groups enter once while reading downward; scrolling back above them reverses.
-  for (const selector of ['.logo-grid',
-    '.shoutouts-people','.shoutouts-second-row','.shoutouts-initiatives']) {
-    const element=document.querySelector(selector);
-    gsap.from(element,{
-      y:STORY_MOTION.travel,opacity:0,duration:STORY_MOTION.entrance,ease:'power2.out',
-      scrollTrigger:{trigger:element,start:'top 90%',toggleActions:'play complete play reverse'}
-    });
-  }
-  for (const selector of ['.about-sheet','.contact-sheet']) {
-    const paper=document.querySelector(selector);
-    const narrow=()=>window.matchMedia('(max-width:575px)').matches;
-    const rotation=()=>selector==='.about-sheet' ? 1.13 : selector==='.collective-sheet' ? (window.matchMedia('(max-width:991px)').matches ? 2 : 4.93) : 0;
-    gsap.fromTo(paper,{y:()=>narrow()?12:18,rotation:()=>rotation()-(narrow()?.4:.65),scale:.995},{
-      y:0,rotation,scale:1,duration:.9,ease:'power2.out',
-      scrollTrigger:{trigger:paper,start:'top 92%',toggleActions:'play complete play reverse',invalidateOnRefresh:true}
-    });
-  }
+  setupPaperArrivals();
   if (!heroPaperHasPlayed) {
     heroPaperHasPlayed=true;
     gsap.from('.hero-paper',{y:8,rotation:-.15,duration:1.05,ease:'power2.out'});
@@ -355,3 +338,59 @@ function setupBubbleTrim() {
     .to(guide,{strokeDashoffset:0,duration:.96,ease:'none'})
     .to(full,{opacity:1,duration:.04,ease:'none'});
 }
+
+// Entrances follow scroll progress so upward scrolling naturally puts the paper back.
+function setupPaperArrivals() {
+  const narrow=()=>window.matchMedia('(max-width:575px)').matches;
+  const arrive=(element,from,to={},footer=false)=>gsap.fromTo(element,from,{
+    x:0,y:0,rotation:0,rotationY:0,scale:1,opacity:1,...to,
+    ease:'power4.out',
+    scrollTrigger:{trigger:element,start:'top 95%',end:footer?'clamp(top 83%)':'top 76%',scrub:footer?.18:.24,invalidateOnRefresh:true}
+  });
+  for (const [selector,side,angle] of [
+    ['.about-sheet',-1,-.9],['.works-content',1,.65],
+    ['.reflections-copy',-1,-.5],['.experience-copy',1,.5],
+    ['.dezod-feature',-1,-1.2],['.shoutouts-copy',-1,-.6],
+    ['.contact-sheet',1,.7]
+  ]) {
+    const element=document.querySelector(selector);
+    const base=selector==='.about-sheet'?1.13:0;
+    if (selector==='.about-sheet') {
+      // A sheet pushed onto the table, with a brief overshoot before it settles.
+      gsap.fromTo(element,{
+        x:()=>narrow()?-38:-110,y:()=>narrow()?48:70,
+        rotation:()=>narrow()?-9:-13,scale:.97,opacity:0,transformOrigin:'35% 70%'
+      },{
+        x:0,y:0,rotation:base,scale:1,opacity:1,ease:'back.out(1.15)',
+        scrollTrigger:{trigger:element,start:'top 96%',end:'top 72%',scrub:.24,invalidateOnRefresh:true}
+      });
+      continue;
+    }
+    arrive(element,{x:()=>narrow()?0:side*34,y:()=>narrow()?26:42,
+      rotation:()=>base+(narrow()?angle:angle*1.6),scale:.992,opacity:0}, {rotation:base});
+  }
+  for (const selector of ['.book-slot','.television-slot','.browser-slot']) {
+    const element=document.querySelector(selector);
+    const base=selector==='.browser-slot'?-5.07:0;
+    arrive(element,{x:0,y:20,rotation:base-1.2,scale:.98,opacity:0},{rotation:base});
+  }
+  document.querySelectorAll('.logo-card').forEach((card,index)=>{
+    const columns=()=>getComputedStyle(card.parentElement).gridTemplateColumns.split(' ').length;
+    const direction=()=>index%columns()<columns()/2?-1:1;
+    gsap.fromTo(card,{
+      x:()=>direction()*(window.innerWidth+card.offsetWidth),y:34,
+      rotation:()=>direction()*12,scale:.84,opacity:0
+    },{
+      x:0,y:0,rotation:0,scale:1,opacity:1,ease:'power4.out',
+      scrollTrigger:{trigger:card,start:()=>`top ${96-(index%columns())*.7}%`,end:'top 76%',scrub:.22,invalidateOnRefresh:true}
+    });
+  });
+  document.querySelectorAll('.shoutout-card,.shoutout-logo').forEach((card,index)=>{
+    arrive(card,{x:()=>window.innerWidth+card.offsetWidth,y:38,
+      rotation:18+(index%3)*3,rotationY:-24,scale:.92,opacity:0});
+  });
+  arrive(document.querySelector('.site-footer'),{x:0,y:84,rotation:-1.1,scale:.98,opacity:0},{},true);
+}
+
+// Keep viewport triggers aligned after the local typefaces finish loading.
+document.fonts.ready.then(()=>window.ScrollTrigger?.refresh());
