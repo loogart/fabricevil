@@ -47,3 +47,5 @@
   font-display: swap;
   src: url(site-font-6.ttf) format('truetype');
 }
+
+@font-face { font-family:'Kalam'; font-style:normal; font-weight:400; font-display:swap; src:url('kalam-regular.ttf') format('truetype'); }
