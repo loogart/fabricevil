@@ -85,3 +85,36 @@ h1 { font-size:clamp(54px,5.56vw,88px); line-height:.9; font-weight:600; letter-
  .masthead .wordmark span:first-child { font-size:32px; }
  .masthead .wordmark span:last-child { font-size:30px; }
 }
+
+/* A compact hero with vertically centred, left-aligned copy beside the character. */
+@media(min-width:992px) {
+ .hero-paper { min-height:680px; }
+ .hero-body { padding-top:35px; padding-bottom:28px; align-items:center; }
+ .character-stage { height:450px; }
+ .fabrice { height:365px; top:68px; left:calc(50% - 106px); }
+ .speech-bubble { top:0; }
+ .intro-copy { padding-top:0; padding-left:40px; align-self:center; text-align:left; }
+ .intro-copy h1,.intro-copy p { margin-left:0; margin-right:0; }
+}
+@media(min-width:1600px) { .hero-paper { min-height:720px; } }
+@media(min-width:768px) and (max-width:991px) {
+ .hero-body { padding:28px 0 32px; align-items:center; }
+ .character-column { order:0; margin-top:0; }
+ .character-stage { height:345px; }
+ .fabrice { height:270px; top:60px; left:calc(50% - 83px); }
+ .speech-bubble { top:0; left:36%; font-size:18px; padding:10px 16px; }
+ .intro-copy { order:1; padding-left:28px; text-align:left; align-self:center; }
+ .intro-copy h1 { font-size:clamp(42px,5.3vw,54px); margin-left:0; margin-right:0; }
+ .intro-copy p { margin-left:0; margin-right:0; }
+}
+@media(max-width:767px) {
+ .hero-body { padding:28px 0 30px; }
+ .character-column { margin-top:18px; }
+ .character-stage { height:345px; }
+ .fabrice { height:285px; top:58px; }
+}
+/* A shorter attached tail leaves a small breathing gap above Fabrice's head. */
+.speech-bubble::after { width:26px; height:23px; }
+@media(min-width:992px) and (max-width:1250px) { .speech-bubble { top:7px; } }
+@media(min-width:768px) and (max-width:991px) { .speech-bubble::after { width:24px; height:22px; } }
+@media(max-width:767px) { .speech-bubble::after { width:24px; height:21px; } }

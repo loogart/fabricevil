@@ -48,6 +48,14 @@ menuButton.addEventListener('click', () => {
   menuButton.querySelector('span').textContent = open ? '−' : '＋';
 });
 configureMotion();
+document.querySelectorAll('.surface-curl').forEach(button=>{
+  button.addEventListener('click',()=>{
+    const open=button.getAttribute('aria-pressed')!=='true';
+    button.setAttribute('aria-pressed',String(open));
+    button.setAttribute('aria-label',open?'Replier le coin du papier':'Déplier le coin du papier');
+    button.parentElement.classList.toggle('peel-open',open);
+  });
+});
 
 // Scale wrappers while leaving the supplied SVG root dimensions intact.
 const svgObserver = new ResizeObserver(entries => {
@@ -96,21 +104,9 @@ function setupScrollLines() {
   wipeLine('.email-reveal','.contact-email');
   wipeLine('.footer-doodle','.footer-doodle',true);
   wipeLine('.footer-rule','.footer-rule',true);
+  setupBubbleTrim();
 
-  const guide=document.querySelector('#reflection-ink-guide');
-  const art=document.querySelector('#reflection-ink-art');
-  const full=document.querySelector('#reflection-ink-full');
-  const length=guide.getTotalLength();
-  gsap.set(art,{attr:{mask:'url(#reflection-ink-mask)'}});
-  gsap.set(full,{opacity:0});
-  gsap.set(guide,{strokeDasharray:length,strokeDashoffset:length});
-  lineTimeline('.reflection-doodle')
-    .to(guide,{strokeDashoffset:0,duration:.58,ease:'none'})
-    // Complete the original artwork exactly, including fine details outside the guide.
-    .to(full,{opacity:1,duration:.02,ease:'none'})
-    .to(full,{opacity:1,duration:.18,ease:'none'})
-    .to(full,{opacity:0,duration:.02,ease:'none'})
-    .to(guide,{strokeDashoffset:length,duration:.20,ease:'none'});
+
 }
 
 // The first-screen lines play once without requiring a scroll gesture.
@@ -208,7 +204,7 @@ function setupStoryMotion() {
   setupPaperUnfold();
 
   // Visual groups enter once while reading downward; scrolling back above them reverses.
-  for (const selector of ['.book-slot','.television-slot','.browser-slot','.logo-grid',
+  for (const selector of ['.logo-grid',
     '.shoutouts-people','.shoutouts-second-row','.shoutouts-initiatives']) {
     const element=document.querySelector(selector);
     gsap.from(element,{
@@ -237,7 +233,7 @@ function setupBodyLines() {
   const observer=new ResizeObserver(entries=>{
     if (active) for (const {target} of entries) renders.get(target)?.();
   });
-  const paragraphs=document.querySelectorAll('.intro-copy p,.about-copy p,.works-intro,.reflections-copy p,.experience-copy p,.shoutouts-copy p,.contact-sheet > p');
+  const paragraphs=document.querySelectorAll('.intro-copy p,.about-copy p,.reflections-copy p,.experience-copy p,.shoutouts-copy p,.contact-sheet > p');
   for (const paragraph of paragraphs) {
     paragraph.classList.add('body-line-reveal');
     const state={progress:0};
@@ -344,4 +340,18 @@ function setupPaperUnfold() {
     .set(base,{clipPath:'inset(0 0 0% 0)'},.8)
     .to(fold,{opacity:0,duration:.2,ease:'none'},.8)
     .to(content,{opacity:1,duration:.3,ease:'power1.out'},.7);
+}
+
+// Trim a guide mask while rendering the client's original filled outline unchanged.
+function setupBubbleTrim() {
+  const guide=document.querySelector('#bubble-trim-guide');
+  const original=document.querySelector('#bubble-trim-original');
+  const full=document.querySelector('#bubble-trim-full');
+  const length=guide.getTotalLength();
+  gsap.set(original,{attr:{mask:'url(#bubble-trim-mask)'}});
+  gsap.set(guide,{strokeDasharray:length,strokeDashoffset:length});
+  gsap.set(full,{opacity:0});
+  gsap.timeline({scrollTrigger:{trigger:'.reflection-bubble',start:'top 90%',end:'top 32%',scrub:.8,invalidateOnRefresh:true}})
+    .to(guide,{strokeDashoffset:0,duration:.96,ease:'none'})
+    .to(full,{opacity:1,duration:.04,ease:'none'});
 }
