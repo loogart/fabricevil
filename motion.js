@@ -48,15 +48,6 @@ menuButton.addEventListener('click', () => {
   menuButton.querySelector('span').textContent = open ? '−' : '＋';
 });
 configureMotion();
-document.querySelectorAll('.surface-curl').forEach(button=>{
-  button.addEventListener('click',()=>{
-    const open=button.getAttribute('aria-pressed')!=='true';
-    button.setAttribute('aria-pressed',String(open));
-    button.setAttribute('aria-label',open?'Replier le coin du papier':'Déplier le coin du papier');
-    button.parentElement.classList.toggle('peel-open',open);
-  });
-});
-
 // Scale wrappers while leaving the supplied SVG root dimensions intact.
 const svgObserver = new ResizeObserver(entries => {
   for (const {target} of entries) {
@@ -201,7 +192,6 @@ function setupStoryMotion() {
   typewriter(document.querySelector('#reflections-title'),true);
   typewriter(document.querySelector('#contact-title'),true);
   bodyRevealCleanup=setupBodyLines();
-  setupPaperUnfold();
 
   setupPaperArrivals();
   if (!heroPaperHasPlayed) {
@@ -303,26 +293,6 @@ function setupDetailMotion() {
     rotation:-58.87,duration:1,ease:'power3.out',
     scrollTrigger:{trigger:'.contact-paperclip',start:'top 90%',end:'bottom top',toggleActions:'play reverse play reverse'}
   });
-}
-
-// Scroll opens one paper sheet; the layout and its original links stay intact.
-function setupPaperUnfold() {
-  const sheet=document.querySelector('.collective-sheet');
-  const fold=sheet.querySelector('.paper-fold');
-  const base=sheet.querySelector('.paper-base');
-  const content=sheet.querySelector('.collective-content');
-  gsap.set(fold,{display:'block',rotationX:-165,opacity:1});
-  gsap.set(base,{display:'block',clipPath:'inset(0 0 50% 0)'});
-  gsap.set(sheet,{backgroundImage:'none',clipPath:'inset(0 0 48% 0)',boxShadow:'0 2px 3px #0003'});
-  gsap.set(content,{opacity:0});
-  gsap.timeline({scrollTrigger:{
-    trigger:sheet,start:'top 88%',end:'top 35%',scrub:.8,invalidateOnRefresh:true
-  }})
-    .to(sheet,{clipPath:'inset(0 0 0% 0)',boxShadow:'0 4px 8px #0004',duration:.8,ease:'none'},0)
-    .to(fold,{rotationX:0,duration:.8,ease:'power1.inOut'},0)
-    .set(base,{clipPath:'inset(0 0 0% 0)'},.8)
-    .to(fold,{opacity:0,duration:.2,ease:'none'},.8)
-    .to(content,{opacity:1,duration:.3,ease:'power1.out'},.7);
 }
 
 // Trim a guide mask while rendering the client's original filled outline unchanged.

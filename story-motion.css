@@ -55,60 +55,6 @@
 @media(max-width:991px) { .reflection-visual { height:650px; } }
 @media(max-width:575px) { .reflection-visual { height:450px; } }
 
-/* Local paper prototype: the bottom half opens around a horizontal crease. */
-.collective-sheet { perspective:900px; }
-.collective-content { position:relative; z-index:1; }
-.paper-fold { display:none; position:absolute; top:50%; left:0; width:100%; height:50%; transform-origin:center top; background:linear-gradient(to bottom,#514c3533,transparent 28%),url('assets/paper-grid.png') center/cover; box-shadow:0 -3px 7px #0002; pointer-events:none; z-index:2; }
-.collective-sheet:focus-within { clip-path:none !important; }
-.collective-sheet:focus-within .collective-content { opacity:1 !important; }
-.collective-sheet:focus-within .paper-fold,.motion-reduced .paper-fold { display:none !important; }
-@media(prefers-reduced-motion:reduce) { .paper-fold { display:none !important; } }
-
-/* During unfolding only the fixed top half sits behind the hinged bottom half. */
-.paper-base { display:none; position:absolute; inset:0; background:url('assets/paper-grid.png') center/cover; pointer-events:none; }
-.paper-fold { background-size:100% 100%,100% 200%; background-position:center,bottom center; }
-.collective-sheet:focus-within .paper-base { clip-path:none !important; }
-
-/* Small physical details inspired by curled paper and peeled sticker corners. */
-.about-sheet { position:relative; --curl-size:36px; clip-path:polygon(0 0,100% 0,100% calc(100% - var(--curl-size)),calc(100% - var(--curl-size)) 100%,0 100%); box-shadow:none; filter:drop-shadow(0 7px 5px #0003); }
-.surface-curl { position:absolute; right:0; bottom:0; width:36px; height:36px; z-index:3; pointer-events:none; background:linear-gradient(135deg,#c7c3b5 0%,#f7f5eb 48%,#b9b6a7 52%,#eae6d9 68%); clip-path:polygon(0 0,100% 0,88% 12%,64% 29%,42% 52%,23% 79%,0 100%); filter:drop-shadow(-2px -2px 2px #0003); transform-origin:top left; transition:transform .45s ease-out; }
-.about-sheet:hover .surface-curl { transform:rotate(-3deg) scale(1.07); }
-.surface-crease { position:absolute; left:3%; right:3%; top:52%; height:5px; pointer-events:none; z-index:0; opacity:.25; background:linear-gradient(to bottom,transparent,#77715a22 40%,#ffffff88 60%,transparent); transform:rotate(-.5deg); }
-.contact-sheet .surface-curl { right:auto; left:0; rotate:90deg; background:linear-gradient(135deg,#173f3b,#50807a 48%,#163e39 52%,#32645e 68%); width:25px; height:25px; }
-.contact-sheet .surface-crease { opacity:.16; top:64%; }
-.project-badge { position:relative; }
-.project-badge img { clip-path:polygon(0 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%); border-radius:8px 8px 0 8px; }
-.project-badge::after { content:''; position:absolute; top:96px; right:14px; width:16px; height:16px; background:linear-gradient(135deg,#a9a99e,#f8f6ec 65%,#cbc9bb); clip-path:polygon(0 0,100% 0,64% 33%,35% 63%,0 100%); pointer-events:none; transition:scale .35s ease; transform-origin:top left; }
-.project-badge:hover::after,.project-badge:focus-visible::after { scale:1.08; }
-@media(max-width:575px) { .about-sheet { --curl-size:26px; }.about-sheet .surface-curl { width:26px; height:26px; }.project-badge::after { top:70px; right:17px; } }
-@media(prefers-reduced-motion:reduce) { .surface-curl { transition:none; }.about-sheet:hover .surface-curl { transform:none; } }
-/* Keep the peel aligned with its cover when a featured project is hovered. */
-.project-badge:hover img,.project-badge:focus-visible img { scale:1; filter:brightness(1.06); }
-.project-badge:hover::after,.project-badge:focus-visible::after { scale:1; }
-
-/* Grabbable paper corners: hover, keyboard focus, or tap to hold the peel open. */
-.about-sheet { --curl-size:48px; transition:clip-path .45s ease; }
-.surface-curl { pointer-events:auto; cursor:pointer; border:0; padding:0; width:var(--curl-size,40px); height:var(--curl-size,40px); transition:width .45s ease,height .45s ease,transform .45s ease; }
-.about-sheet:hover .surface-curl { transform:none; }
-.about-sheet:has(.surface-curl:hover),.about-sheet:has(.surface-curl:focus-visible),.about-sheet.peel-open { --curl-size:76px; }
-.surface-curl:focus-visible { outline:3px solid var(--lime); outline-offset:-5px; }
-.contact-sheet { --curl-size:40px; }
-.contact-sheet .surface-curl { width:var(--curl-size); height:var(--curl-size); }
-.contact-sheet:has(.surface-curl:hover),.contact-sheet:has(.surface-curl:focus-visible),.contact-sheet.peel-open { --curl-size:64px; }
-.project-badge { --badge-peel:24px; }
-.project-badge img { clip-path:polygon(0 0,100% 0,100% calc(100% - var(--badge-peel)),calc(100% - var(--badge-peel)) 100%,0 100%); transition:clip-path .4s ease,filter .4s ease; }
-.project-badge::after { top:calc(112px - var(--badge-peel)); width:var(--badge-peel); height:var(--badge-peel); transition:width .4s ease,height .4s ease,top .4s ease; }
-.project-badge:hover,.project-badge:focus-visible { --badge-peel:38px; }
-@media(max-width:575px) {
- .about-sheet { --curl-size:38px; }
- .about-sheet .surface-curl { width:var(--curl-size); height:var(--curl-size); }
- .about-sheet:has(.surface-curl:hover),.about-sheet:has(.surface-curl:focus-visible),.about-sheet.peel-open { --curl-size:56px; }
- .contact-sheet:has(.surface-curl:hover),.contact-sheet:has(.surface-curl:focus-visible),.contact-sheet.peel-open { --curl-size:50px; }
- .project-badge::after { top:calc(86px - var(--badge-peel)); }
- .project-badge:hover,.project-badge:focus-visible { --badge-peel:32px; }
-}
-@media(prefers-reduced-motion:reduce) { .surface-curl,.about-sheet,.project-badge img,.project-badge::after { transition:none; } }
-
 /* Supplied line-art bubble keeps its original proportions and points into the head. */
 .reflection-visual { container-type:inline-size; }
 .reflection-bubble.current-projects { top:auto; bottom:calc(77.036cqw - 75px); left:0; right:0; width:100%; max-width:575px; margin-inline:auto; aspect-ratio:575/426; gap:18px; padding:18% 10% 0; background:none; filter:none; }
@@ -124,7 +70,6 @@
 @media(max-width:360px) {
  .reflection-bubble .project-badge { width:100px; }
  .reflection-bubble .project-badge img { width:70px; height:70px; }
- .reflection-bubble .project-badge::after { top:calc(70px - var(--badge-peel)); right:15px; }
  .reflection-bubble .project-badge span { font-size:10px; }
 }
 
