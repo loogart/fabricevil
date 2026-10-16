@@ -45,7 +45,7 @@ menuButton.addEventListener('click', () => {
   const open = menuButton.getAttribute('aria-expanded') !== 'true';
   menuButton.setAttribute('aria-expanded',String(open));
   document.querySelector('#mobile-nav').hidden = !open;
-  menuButton.querySelector('span').textContent = open ? '−' : '＋';
+  menuButton.querySelector('.menu-icon').classList.toggle('is-open',open);
 });
 configureMotion();
 // Scale wrappers while leaving the supplied SVG root dimensions intact.
@@ -63,7 +63,7 @@ document.querySelectorAll('.svg-fit').forEach(el=>svgObserver.observe(el));
 document.querySelectorAll('#mobile-nav a').forEach(link=>link.addEventListener('click',()=>{
   document.querySelector('#mobile-nav').hidden=true;
   menuButton.setAttribute('aria-expanded','false');
-  menuButton.querySelector('span').textContent='＋';
+  menuButton.querySelector('.menu-icon').classList.remove('is-open');
 }));
 
 // Lines draw on entry, hold while the section is in view, and erase on exit.
@@ -348,18 +348,35 @@ function setupPaperArrivals() {
     const columns=()=>getComputedStyle(card.parentElement).gridTemplateColumns.split(' ').length;
     const direction=()=>index%columns()<columns()/2?-1:1;
     gsap.fromTo(card,{
-      x:()=>direction()*(window.innerWidth+card.offsetWidth),y:34,
-      rotation:()=>direction()*12,scale:.84,opacity:0
+      x:()=>direction()*Math.min(220,window.innerWidth*.35),y:20,
+      rotation:()=>direction()*5,scale:.95,opacity:.12
     },{
-      x:0,y:0,rotation:0,scale:1,opacity:1,ease:'power4.out',
-      scrollTrigger:{trigger:card,start:()=>`top ${96-(index%columns())*.7}%`,end:'top 76%',scrub:.22,invalidateOnRefresh:true}
+      x:0,y:0,rotation:0,scale:1,opacity:1,ease:'power1.out',
+      scrollTrigger:{trigger:card,start:()=>`top ${98-(index%columns())*.5}%`,end:'top 46%',scrub:.85,invalidateOnRefresh:true}
     });
   });
   document.querySelectorAll('.shoutout-card,.shoutout-logo').forEach((card,index)=>{
-    arrive(card,{x:()=>window.innerWidth+card.offsetWidth,y:38,
-      rotation:18+(index%3)*3,rotationY:-24,scale:.92,opacity:0});
+    gsap.fromTo(card,{
+      x:()=>Math.min(240,window.innerWidth*.4),y:24,
+      rotation:5+(index%3)*1.5,rotationY:-6,scale:.97,opacity:.12
+    },{
+      x:0,y:0,rotation:0,rotationY:0,scale:1,opacity:1,ease:'power1.out',
+      scrollTrigger:{trigger:card,start:'top 98%',end:'top 46%',scrub:.9,invalidateOnRefresh:true}
+    });
   });
-  arrive(document.querySelector('.site-footer'),{x:0,y:84,rotation:-1.1,scale:.98,opacity:0},{},true);
+  const footer=document.querySelector('.site-footer');
+  const footerSlot=footer.closest('.footer-arrival-slot');
+  gsap.timeline({scrollTrigger:{
+    id:'footer-paper-arrival',trigger:footerSlot,start:'top 88%',end:'clamp(bottom bottom)',
+    scrub:1,invalidateOnRefresh:true
+  }})
+    .fromTo(footer,{
+      x:()=>narrow()?16:40,y:()=>window.innerHeight*.6+footer.offsetWidth*.1,
+      rotation:-5.5,scale:.985,opacity:1,transformOrigin:'50% 100%'
+    },{
+      x:0,y:0,rotation:.25,scale:1,duration:1,ease:'power1.out'
+    },.12)
+    .to(footer,{rotation:0,duration:.18,ease:'sine.out'});
 }
 
 // Keep viewport triggers aligned after the local typefaces finish loading.

@@ -181,3 +181,6 @@ body.motion-reduced,body.motion-reduced * { scroll-behavior:auto !important; }
  .contact-sheet { padding-left:22px; padding-right:22px; }
  .contact-paperclip { width:78px; height:19.936px; top:15px; right:-12px; }
 }
+
+/* Keep the native email and its marker text perfectly aligned and centred. */
+.contact-email a,.email-ink { text-align:center; }
