@@ -1,0 +1,43 @@
+/* An inset screen mounted on paper within Expériences. */
+.dezod-spotlight { position:relative; filter:drop-shadow(0 5px 5px #0003); transform:rotate(-.65deg); }
+.dezod-stage { position:relative; isolation:isolate; overflow:hidden; display:flex; align-items:center; gap:48px; padding:46px 52px; background:#090909; color:#fff; perspective:1000px; mask:url('assets/dezod-paper-mask.svg') center/100% 100% no-repeat; }
+.dezod-stage::before { content:''; position:absolute; inset:0; background:url('assets/paper-base.png') center/cover; opacity:.13; mix-blend-mode:screen; pointer-events:none; }
+.dezod-patterns { position:absolute; inset:0; pointer-events:none; opacity:.55; mask-image:radial-gradient(ellipse 42% 65% at center,transparent 35%,#000 100%); }
+.dezod-pattern { position:absolute; top:0; height:100%; width:auto; max-width:none; overflow:visible; }
+.dezod-pattern-left { left:-6%; }
+.dezod-pattern-right { right:-8%; }
+.dezod-logo-frame { position:relative; z-index:1; width:34%; max-width:340px; flex-shrink:0; transform-style:preserve-3d; }
+.dezod-logo-svg { display:block; width:100%; height:auto; overflow:visible; }
+.dezod-story { position:relative; z-index:2; flex:1; min-width:0; }
+.dezod-story-inner { max-width:680px; margin:auto; }
+.dezod-story-kicker { color:#fff; font-family:'Pixelify Sans',sans-serif; font-size:26px; margin:0 0 16px; }
+.dezod-scroll-copy { font-size:var(--body-size); line-height:var(--body-leading); font-weight:500; margin:0 0 24px; }
+.dezod-story-word { display:inline-block; }
+.dezod-story-link { color:var(--lime); display:inline-block; font-size:17px; font-weight:600; text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:5px; }
+.dezod-story-link:hover { color:#e6ff9c; }
+.dezod-story-link:focus-visible { outline:2px solid currentColor; outline-offset:8px; }
+.dezod-stage:focus-within .dezod-story { opacity:1!important; transform:none!important; }
+.dezod-stage:focus-within .dezod-story-word { opacity:1!important; clip-path:none!important; }
+.dezod-stage:focus-within .dezod-scroll-copy { mask-image:none!important; }
+.experience-history { padding-top:70px; }
+@media(max-width:991px) {
+ .dezod-stage { flex-direction:column; gap:24px; padding:38px 38px; }
+ .dezod-logo-frame { width:55%; max-width:280px; }
+ .dezod-story { width:100%; }
+}
+@media(max-width:767px) {
+ .dezod-spotlight { transform:rotate(-.35deg); }
+ .dezod-stage { padding:30px 26px; gap:22px; }
+ .dezod-logo-frame { width:min(88%,230px); }
+ .dezod-story-kicker { font-size:24px; }
+ .dezod-pattern-left { left:-42%; }
+ .dezod-pattern-right { right:-55%; }
+ .dezod-patterns { opacity:.4; mask-image:radial-gradient(ellipse 80% 65% at center,transparent 50%,#000 100%); }
+ .experience-history { padding-top:50px; }
+}
+
+/* The title and its paper belong to a single compact section. */
+#experiences > .section-width > .section-heading { margin-bottom:26px; }
+@media(max-width:767px) {
+ #experiences > .section-width > .section-heading { margin-bottom:22px; }
+}

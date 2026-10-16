@@ -7,6 +7,7 @@ let heroPaperHasPlayed=false;
 let heroTitleHasPlayed=false;
 let bodyRevealCleanup;
 let depthCleanup;
+let dezodCleanup;
 const LINE_MOTION = { enabled:true, draw:.60, hold:.20, erase:.20, smoothing:1.1 };
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const toggleButton = document.querySelector('#motion-toggle');
@@ -14,6 +15,7 @@ const status = document.querySelector('#motion-status');
 let manuallyReduced = false;
 let motionContext;
 function configureMotion() {
+  dezodCleanup?.();
   depthCleanup?.();
   bodyRevealCleanup?.();
   motionContext?.revert();
@@ -23,12 +25,14 @@ function configureMotion() {
   if (toggleButton) toggleButton.textContent = reduced ? 'Mouvement réduit' : 'Réduire le mouvement';
   status.textContent = reduced ? 'Les animations sont désactivées.' : 'Les animations sont activées.';
   if (!window.gsap) { status.textContent = 'Animation indisponible. Le visuel reste affiché.'; return; }
+  document.body.classList.toggle('dezod-motion-active',!reduced && !!window.ScrollTrigger);
   if (reduced) return;
   motionContext = gsap.context(() => {
     if (LINE_MOTION.enabled) setupHeroIntro();
     if (STORY_MOTION.enabled) { setupGreeting(); setupHeroTitle(); }
     if (window.ScrollTrigger && LINE_MOTION.enabled) {
       gsap.registerPlugin(ScrollTrigger);
+      setupDezodSpotlight();
       setupScrollLines();
       if (STORY_MOTION.enabled) { setupStoryMotion(); setupDetailMotion(); }
     }
@@ -196,7 +200,7 @@ function setupStoryMotion() {
   setupPaperArrivals();
   if (!heroPaperHasPlayed) {
     heroPaperHasPlayed=true;
-    gsap.from('.hero-paper',{y:8,rotation:-.15,duration:1.05,ease:'power2.out'});
+    gsap.from('.hero-paper',{x:-8,y:24,rotation:-.65,duration:.75,ease:'power2.out'});
   }
 }
 
@@ -320,7 +324,7 @@ function setupPaperArrivals() {
   for (const [selector,side,angle] of [
     ['.about-sheet',-1,-.9],['.works-content',1,.65],
     ['.reflections-copy',-1,-.5],['.experience-copy',1,.5],
-    ['.dezod-feature',-1,-1.2],['.shoutouts-copy',-1,-.6],
+    ['.shoutouts-copy',-1,-.6],
     ['.contact-sheet',1,.7]
   ]) {
     const element=document.querySelector(selector);
@@ -381,3 +385,105 @@ function setupPaperArrivals() {
 
 // Keep viewport triggers aligned after the local typefaces finish loading.
 document.fonts.ready.then(()=>window.ScrollTrigger?.refresh());
+// Recalculate after images and browser scroll restoration settle on reload/back navigation.
+window.addEventListener('load',()=>window.ScrollTrigger?.refresh());
+window.addEventListener('pageshow',()=>requestAnimationFrame(()=>requestAnimationFrame(()=>window.ScrollTrigger?.refresh())));
+
+// The camera moves inward while the original logo pieces resolve into place.
+function setupDezodSpotlight() {
+  const section=document.querySelector('.dezod-spotlight');
+  const stage=section.querySelector('.dezod-stage');
+  const frame=section.querySelector('.dezod-logo-frame');
+  const logoPieces=[...frame.querySelectorAll('g > path')];
+  const patternPieces=[...section.querySelectorAll('.dezod-pattern > path')];
+  // Keep the paper in normal document flow: no pin spacer can separate it from its heading.
+  const scene=gsap.timeline({scrollTrigger:{
+    id:'dezod-assembly',trigger:section,start:'top 82%',end:'top 28%',
+    scrub:.45,invalidateOnRefresh:true,
+    onRefresh:self=>{
+      self.getTween()?.pause();
+      self.animation?.totalProgress(self.progress,false);
+    }
+  }});
+  scene.fromTo(frame,{scale:.64,z:-140,y:24},{scale:1,z:0,y:0,duration:.60,ease:'power2.out'},0);
+  logoPieces.forEach((piece,index)=>{
+    const direction=index%2?1:-1;
+    scene.fromTo(piece,{
+      x:direction*(110+(index%4)*35),y:((index%3)-1)*85,
+      rotation:direction*(16+(index%4)*7),scale:.8,opacity:0,transformOrigin:'50% 50%'
+    },{x:0,y:0,rotation:0,scale:1,opacity:1,duration:.40,ease:'power2.out'},.02+(index%6)*.024);
+  });
+  patternPieces.forEach((piece,index)=>{
+    scene.fromTo(piece,{x:(index%2?1:-1)*45,y:(index%3-1)*35,rotation:(index%2?1:-1)*8,scale:1.10,opacity:.45,transformOrigin:'50% 50%'},
+      {x:0,y:0,rotation:0,scale:1,opacity:1,duration:.9,ease:'power1.out'},0);
+  });
+  scene.fromTo(section.querySelector('.dezod-story'),{y:14},{y:0,duration:.4,ease:'power2.out'},.42);
+
+  const cleanups=[];
+  const addTyping=(paragraph,start,duration)=>{
+  let visual=paragraph.querySelector('.dezod-story-visual');
+  if (!visual) {
+    const text=paragraph.textContent;
+    const accessible=document.createElement('span');accessible.className='visually-hidden';accessible.textContent=text;
+    visual=document.createElement('span');visual.className='dezod-story-visual';visual.setAttribute('aria-hidden','true');
+    for (const token of text.split(/(\s+)/)) {
+      if (!token) continue;
+      if (/^\s+$/.test(token)) { visual.append(document.createTextNode(token));continue; }
+      const word=document.createElement('span');word.className='dezod-story-word';word.textContent=token;visual.append(word);
+    }
+    paragraph.replaceChildren(accessible,visual);
+  }
+  const words=[...visual.querySelectorAll('.dezod-story-word')];
+  const count=words.reduce((sum,word)=>sum+word.textContent.length+1,0);
+  const state={letters:0};let active=true,last=-1;
+  const range=document.createRange();
+  const render=()=>{
+    if (!active) return;
+    const letters=Math.round(state.letters);if(letters===last)return;last=letters;
+    let offset=0;
+    for(const word of words){
+      const length=word.textContent.length;
+      const revealed=Math.max(0,Math.min(length,letters-offset));
+      word.style.opacity=revealed?'1':'0';
+      if(revealed===length)word.style.clipPath='none';
+      else if(revealed){
+        range.setStart(word.firstChild,0);range.setEnd(word.firstChild,revealed);
+        const box=word.getBoundingClientRect();
+        word.style.clipPath=`inset(0 ${Math.max(0,box.width-range.getBoundingClientRect().width)}px 0 0)`;
+      }else word.style.clipPath='inset(0 100% 0 0)';
+      offset+=length+1;
+    }
+  };
+  render();
+  const observer=new ResizeObserver(()=>{last=-1;render();});observer.observe(paragraph);
+  scene.to(state,{letters:count,duration,ease:'none',onUpdate:render},start);
+  cleanups.push(()=>{active=false;observer.disconnect();words.forEach(word=>{word.style.removeProperty('opacity');word.style.removeProperty('clip-path');});});
+  };
+  addTyping(section.querySelector('.dezod-story-kicker'),.4,.18);
+  // Keep prose intact and fade its natural lines, rather than typing every character.
+  const paragraph=section.querySelector('.dezod-scroll-copy');
+  const state={progress:0};let active=true;
+  gsap.set(paragraph,{maskRepeat:'no-repeat',maskPosition:'0 0'});
+  const renderLines=()=>{
+    if(!active)return;
+    if(state.progress>=.9999){paragraph.style.maskImage='none';return;}
+    const lineHeight=parseFloat(getComputedStyle(paragraph).lineHeight);
+    const count=Math.max(1,Math.round(paragraph.clientHeight/lineHeight));
+    const images=[],positions=[],sizes=[];
+    for(let i=0;i<count;i++){
+      const alpha=Math.max(0,Math.min(1,state.progress*(1+(count-1)*.3)-i*.3));
+      const color=`rgba(0,0,0,${alpha})`;
+      images.push(`linear-gradient(${color},${color})`);
+      positions.push(`0 ${i*lineHeight}px`);sizes.push(`100% ${lineHeight+.1}px`);
+    }
+    paragraph.style.maskImage=images.join(',');
+    paragraph.style.maskPosition=positions.join(',');paragraph.style.maskSize=sizes.join(',');
+  };
+  renderLines();
+  const lineObserver=new ResizeObserver(renderLines);lineObserver.observe(paragraph);
+  scene.to(state,{progress:1,duration:.32,ease:'none',onUpdate:renderLines},.56);
+  cleanups.push(()=>{active=false;lineObserver.disconnect();paragraph.style.removeProperty('mask-image');paragraph.style.removeProperty('mask-position');paragraph.style.removeProperty('mask-size');});
+  scene.fromTo(section.querySelector('.dezod-story-link'),{opacity:0,y:4},{opacity:1,y:0,duration:.12,ease:'power1.out'},.84);
+  scene.to({}, {duration:.02},.98);
+  dezodCleanup=()=>cleanups.forEach(cleanup=>cleanup());
+}

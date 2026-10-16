@@ -31,9 +31,10 @@
   <link rel="stylesheet" href="sections.css">
   <link rel="stylesheet" href="shoutouts.css">
   <link rel="stylesheet" href="story-motion.css">
+  <link rel="stylesheet" href="dezod-spotlight.css?v=spacing-fix-2">
   <script defer src="vendor/gsap.min.js"></script>
   <script defer src="vendor/ScrollTrigger.min.js"></script>
-  <script defer src="motion.js"></script>
+  <script defer src="motion.js?v=spacing-fix-2"></script>
 </head>
 <body>
   <a class="skip-link" href="#introduction">Aller au contenu</a>
@@ -109,17 +110,70 @@
 </div><div class="reflection-photo" aria-hidden="true"><img src="assets/bon-gason-photo.png" alt="" loading="lazy"></div></div>
       </div>
     </section>
-    <section id="experiences" class="experiences section-width" aria-labelledby="experiences-title">
-      <div class="section-heading"><h2 id="experiences-title">Expériences</h2></div>
-      <article class="dezod-feature" aria-label="Espace Dezòd, projet actuel">
-        <a class="dezod-logo-link" href="https://www.espacedezod.com" target="_blank" rel="noopener noreferrer" aria-label="Découvrir Espace Dezòd"><img src="assets/espace-dezod.png" alt="Espace Dezòd" loading="lazy"></a>
-        <div class="dezod-feature-copy"><small>En ce moment</small><p>L’<a href="https://www.espacedezod.com" target="_blank" rel="noopener noreferrer">Espace Dezòd</a> est un projet qui m’anime en ce moment. Je contribue à la création d’un lieu où l’on peut chiller ensemble, au croisement des études noires et de l’éducation populaire.</p></div>
-      </article>
+    <section id="experiences" class="experiences" aria-labelledby="experiences-title">
+      <div class="section-width"><div class="section-heading"><h2 id="experiences-title">Expériences</h2></div></div>
+    <div id="espace-dezod" class="dezod-spotlight section-width" aria-labelledby="dezod-spotlight-title">
+
+      <div class="dezod-stage">
+        <div class="dezod-patterns" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="775" height="1080" viewBox="0 0 775 1080" fill="none" class="dezod-pattern dezod-pattern-left" aria-hidden="true" focusable="false">
+<path d="M215.537 681.324L193.079 912.667L-44.9307 828.231L148.974 1052.42L203.864 1035.9L119.16 949.982L284.714 985.319L248.48 821.209L369.017 944.342L448.702 950.899L215.537 681.324Z" fill="#222222" />
+<path d="M55.8828 148.66L100.55 177.249L230.311 128.948L54.6602 340.822H234.699H399.369L350.851 279.347L174.206 287.025L323.622 135.53L235.373 47.7161L55.8828 148.66Z" fill="#222222" />
+<path d="M0 394.451L81.2323 460.315L153.689 394.451H0Z" fill="#222222" />
+<path d="M-11.7212 125.209L25.2198 27.3718L121.001 47.7161L-11.7212 125.209Z" fill="#222222" />
+<path d="M287.562 241.098L392.139 241.745L407.538 145.045L287.562 241.098Z" fill="#222222" />
+<path d="M535.005 125.982L484.325 30.0716L572.377 -22.0304L535.005 125.982ZM644.632 280.277L565.976 158.356L642.75 174.317L593.03 74.0773L704.654 37.3735L619.629 -3.66269L725.49 -6.61286L580.373 -78.0429L405.463 -1.10451L537.606 227.609L644.638 280.292L644.632 280.277Z" fill="#222222" />
+<path d="M88.42 617.212L83.5 760.09L-50.0575 670.639L88.42 617.212ZM39.1679 493.462L49.56 566.427L-38.7516 527.351L-22.8006 602.298L-118.008 558.534L-99.9067 632.62L-181.862 591.957L-167.463 670.171L125.638 822.039L139.483 578.114L39.1604 493.453L39.1679 493.462Z" fill="#222222" />
+<path d="M273.087 436.352L359.815 486.697L299.228 552.518L217.326 506.386L273.09 436.363L273.087 436.352ZM245.877 366.699L156.816 519.085L325.837 654.681L450.523 474.58L245.866 366.703L245.877 366.699Z" fill="#222222" />
+<path d="M375.49 1165.77L374.917 1057.3L477.083 1051.83L375.49 1165.77ZM401.324 1353.28L387.976 1208.8L448.663 1258.46L450.942 1146.59L566.886 1165.68L510.481 1089.97L605.704 1136.32L510.078 1005.87L319.416 993.184L330.793 1257.08L401.321 1353.29L401.324 1353.28Z" fill="#222222" />
+</svg><svg xmlns="http://www.w3.org/2000/svg" width="980" height="1080" viewBox="0 0 980 1080" fill="none" class="dezod-pattern dezod-pattern-right" aria-hidden="true" focusable="false">
+<path d="M718.016 939.381L823.404 1035.98L668.618 1079.35L718.016 939.381ZM591.956 896.382L654.163 935.907L567.069 977.626L634.395 1014.21L539.256 1058.13L607.325 1092.52L523.156 1128.38L591.956 1168.27L897.872 1044.22L721.489 875.163L591.945 896.382H591.956Z" fill="#222222" />
+<path d="M260.468 235.455L238.01 4.11129L-6.80969e-05 88.5472L193.905 -135.637L248.795 -119.117L164.091 -33.2034L329.645 -68.5408L293.41 95.5699L413.947 -27.563L493.632 -34.12L260.468 235.455Z" fill="#222222" />
+<path d="M703.195 536.885L777.845 469.924L821.758 547.866L752.604 611.535L703.206 536.885H703.195ZM628.544 541.273L746.01 673.011L927.146 554.082L794.311 379.905L628.544 541.284V541.273Z" fill="#222222" />
+<path d="M603.668 379.905L684.9 445.768L757.357 379.905H603.668Z" fill="#222222" />
+<path d="M633.67 785.864L714.902 720L787.359 785.864H633.67Z" fill="#222222" />
+<path d="M821.027 925.663L902.26 991.526L974.716 925.663H821.027Z" fill="#222222" />
+<path d="M779.133 90.3812L887.609 90.3732L892.546 192.566L779.133 90.3812ZM591.496 115.238L736.04 102.642L686.065 163.07L797.921 165.932L778.231 281.775L854.233 225.765L807.391 320.745L938.337 225.8L952.013 35.2072L688.06 45.209L591.48 115.235L591.496 115.238Z" fill="#222222" />
+<path d="M589.254 258.164L482.856 279.295L458.114 180.019L589.254 258.164ZM768.458 197.246L629.134 237.746L666.386 168.744L556.114 187.718L552.87 70.2584L489.229 139.995L516.68 37.7122L406.728 156.338L430.426 345.946L687.38 284.738L768.475 197.246L768.458 197.246Z" fill="#222222" />
+<ellipse cx="882.129" cy="284.146" rx="0.5" ry="3.8541" fill="#D9D9D9" />
+<path d="M808.599 674.39L853.266 702.98L983.027 654.679L807.376 866.553H987.415H1152.08L1103.57 805.077L926.922 812.756L1076.34 661.261L988.089 573.447L808.599 674.39Z" fill="#222222" />
+</svg></div>
+        <div class="dezod-logo-frame" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1362" height="477" viewBox="0 0 1362 477" fill="none" class="dezod-logo-svg" aria-hidden="true" focusable="false">
+<g>
+<path d="M273.715 183.81L433.997 352.136L214.433 476.916H510.841L534.255 424.593L413.863 432.455L548.892 330.357L401.065 250.405L573.048 239.789L630.136 183.81H273.715Z" fill="#FCC807" />
+<path d="M536.94 284.753L581.607 313.343L711.368 265.042L535.717 476.916H715.756H880.426L831.909 415.44L655.263 423.119L804.679 271.624L716.43 183.81L536.94 284.753Z" fill="#0A8A30" />
+<path d="M880.427 340.79L955.078 273.829L998.99 351.771L929.836 415.44L880.438 340.79H880.427ZM805.776 345.178L923.243 476.916L1104.38 357.987L971.543 183.81L805.776 345.189V345.178Z" fill="#0F549F" />
+<path d="M1188.91 273.829L1276.74 337.499L1220.75 423.13L1188.91 273.829ZM1022.42 183.81L1146.83 258.46L1070.9 278.046L1159.78 346.023L1075.84 428.249L1170.24 427.518L1076.57 476.916H1238.31L1361.26 330.643L1141.7 183.798H1022.4L1022.42 183.81Z" fill="#DB121C" />
+<path d="M194.859 248.028L300.248 344.629L145.462 387.993L194.859 248.028ZM68.8001 205.029L131.007 244.554L43.9128 286.273L111.239 322.861L16.1002 366.774L84.169 401.168L0 437.025L68.8001 476.916L374.715 352.868L198.333 183.81L68.7887 205.029H68.8001Z" fill="#DB121C" />
+<path d="M780.9 183.81L862.133 249.673L934.589 183.81H780.9Z" fill="#0F549F" />
+<path d="M305.15 0L204.881 75.2562L211.84 86.2372L297.094 58.7903L203.053 122.825L211.109 133.075L336.985 82.695L334.791 74.6506L227.574 117.706L319.788 52.9399L315.766 42.3245L225.38 72.6966L308.441 9.88409L305.15 0Z" fill="white" />
+<path d="M1126.38 0L1026.11 75.2562L1033.06 86.2372L1118.32 58.7903L1024.28 122.825L1032.33 133.075L1158.21 82.695L1156.02 74.6506L1048.8 117.706L1141.01 52.9399L1136.99 42.3245L1046.61 72.6966L1129.67 9.88409L1126.38 0Z" fill="white" />
+<path d="M473.18 4.51352L382.795 71.1083L389.388 80.6267L466.233 63.4295L384.063 117.901L389.388 128.562L490.743 57.202L487.452 48.7919L399.992 68.5487L474.266 16.6258L473.18 4.51352Z" fill="white" />
+<path d="M615.808 61.7613L656.887 23.7332H600.347L558.446 70.6969L615.808 61.7613ZM505.929 116.484L596.497 12.7408L662.36 15.4832L670.599 24.2703L620.744 69.7257L546.551 83.5519L515.264 120.323L505.929 116.484Z" fill="white" />
+<path d="M965.144 13.7234L857.699 78.9927L852.374 90.9793L901.235 119.352L970.16 103.823L977.702 90.9564L903.051 105.777L870.2 87.3113L972.697 22.602L965.144 13.7234Z" fill="white" />
+<path d="M820.368 65.0064L778.638 68.0116L796.818 28.7724L791.356 12.3751L635.976 113.124L644.808 120.689L704.753 81.6437L762.766 78.2042L744.918 117.855L754.585 119.957L774.239 77.5301L815.329 75.0962L820.38 65.0064H820.368ZM719.093 72.2966L784.625 29.6179L766.971 68.8572L719.105 72.2966H719.093Z" fill="white" />
+</g>
+<defs>
+<clipPath id="clip0_2_233">
+<rect width="1361.26" height="476.916" fill="white" />
+</clipPath>
+</defs>
+</svg></div>
+      <div class="dezod-story">
+        <div class="dezod-story-inner">
+          <h3 id="dezod-spotlight-title" class="dezod-story-kicker">Espace Dezòd</h3>
+          <p class="dezod-scroll-copy">L’Espace Dezòd est un projet qui m’anime en ce moment. Je contribue à la création d’un lieu où l’on peut chiller ensemble, au croisement des études noires et de l’éducation populaire.</p>
+          <a class="dezod-story-link" href="https://www.espacedezod.com" target="_blank" rel="noopener noreferrer">Découvrir Espace Dezòd</a>
+        </div>
+      </div>
+      </div>
+    </div>
+      <div class="experience-history section-width">
       <div class="row experience-copy">
         <div class="col-lg-6"><p>Et je fais mes classes un peu partout, des gymnases aux tribunaux.</p><p>Avec <a href="http://www.pour3points.ca" target="_blank" rel="noopener noreferrer">Pour 3 Points</a>, j’ai consacré près de quinze ans à soutenir la réussite éducative de jeunes. Cette aventure a été une véritable école en leadership collectif, en relations humaines et en innovation sociale.</p></div>
         <div class="col-lg-6"><p>Comme avocat, j’ai travaillé sur de nombreux dossiers de droit public et constitutionnel. Cette expérience continue d’enrichir ma compréhension des rouages de notre société.</p><p>J’ai tenu mon premier sifflet de coach à 16 ans. Depuis, le coaching et la pédagogie façonnent ma manière d’aborder les relations et le monde.</p></div>
       </div>
       <div class="collaborators"><h3>Quelques organisations avec lesquelles j’ai collaboré…</h3><ul class="logo-grid list-unstyled"><li class="logo-card"><span class="svg-fit " style="width:76px;aspect-ratio:76.0/44.0"><img src="assets/bell.svg" alt="Bell" width="76.0" height="44.0" loading="lazy"></span></li><li class="logo-card"><img class="raster-logo" src="assets/logo-2.png" alt="Barreau du Québec" style="width:143px" loading="lazy"></li><li class="logo-card"><span class="svg-fit " style="width:110px;aspect-ratio:110.0/49.0"><img src="assets/logo-3.svg" alt="Société de transport de Montréal" width="110.0" height="49.0" loading="lazy"></span></li><li class="logo-card"><span class="svg-fit " style="width:138px;aspect-ratio:137.744/56.7595"><img src="assets/logo-4.svg" alt="Université Laval" width="137.744" height="56.7595" loading="lazy"></span></li><li class="logo-card"><span class="svg-fit " style="width:150px;aspect-ratio:148.304/32.0"><img src="assets/desjardins.svg" alt="Desjardins" width="148.304" height="32.0" loading="lazy"></span></li><li class="logo-card"><img class="raster-logo" src="assets/logo-6.png" alt="Santé Canada" style="width:160px" loading="lazy"></li><li class="logo-card"><img class="raster-logo" src="assets/logo-7.png" alt="Institut du Nouveau Monde" style="width:146px" loading="lazy"></li><li class="logo-card"><span class="svg-fit " style="width:129px;aspect-ratio:129.07/28.3019"><img src="assets/montreal.svg" alt="Ville de Montréal" width="129.07" height="28.3019" loading="lazy"></span></li><li class="logo-card"><span class="svg-fit " style="width:148px;aspect-ratio:148.0/49.0"><img src="assets/hydro-quebec.svg" alt="Hydro-Québec" width="148.0" height="49.0" loading="lazy"></span></li><li class="logo-card"><span class="appm-logo"><span class="svg-fit " style="width:86px;aspect-ratio:85.8161/33.1233"><img src="assets/appm-1.svg" alt="Association des professionnels en philanthropie" width="85.8161" height="33.1233" loading="lazy"></span><span class="svg-fit " style="width:29px;aspect-ratio:29.4014/25.5381"><img src="assets/appm-2.svg" alt="" width="29.4014" height="25.5381" loading="lazy"></span></span></li><li class="logo-card"><span class="svg-fit " style="width:137px;aspect-ratio:136.38/39.9304"><img src="assets/logo-11.svg" alt="Énergir" width="136.38" height="39.9304" loading="lazy"></span></li><li class="logo-card"><img class="raster-logo" src="assets/logo-12.png" alt="Tribunal des droits de la personne" style="width:183px" loading="lazy"></li></ul></div>
+      </div>
     </section>
     <section id="influences" class="shoutouts" aria-labelledby="shoutouts-title">
       <div class="section-width shoutouts-inner">
