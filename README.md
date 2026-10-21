@@ -93,3 +93,9 @@ Hero H1: words appear in place from a subtle 3px blur, with length-sensitive typ
 ## Espace Dezòd within Expériences
 
 An inset textured black paper surface with irregular torn edges shares the width of the experience content. Desktop uses a compact logo-and-copy arrangement; narrow screens stack naturally. Decorative paths are clipped within the same torn silhouette. The discovery link is a single lime-yellow underline without an icon or split-word animation. The original supplied SVG pieces assemble with a small camera move as the screen enters view. The title types, prose fades by natural lines, and the discovery link follows inside the same screen. The paper stays in normal document flow directly beneath its heading. The assembly follows scroll from top 82% to top 28% of the viewport, with no pin or spacer. The sequence reverses upward and refresh synchronizes it to the restored scroll position. Reduced motion leaves all content visible. The hero folding test remains removed.
+
+## Reload and restored-scroll motion
+
+Motion initializes after fonts and initial image layout settle. Viewport ranges use untransformed layout coordinates, keeping paper entrances, portraits, partner logos, trim paths and footer lines stable across reloads. A shared synchronization pass reconciles scrubbed timelines, skipped entrance callbacks and custom text masks with the actual scroll position. Image loads and layout changes schedule a debounced refresh without moving the viewport.
+
+A tab-local sessionStorage fallback preserves the current position on reload if native browser restoration falls back to the top. It is only applied on reload of the exact same path/query/hash; fresh visits and direct section links retain normal navigation. Reduced motion continues to show complete static content.

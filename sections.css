@@ -1,5 +1,6 @@
 /* Section styling uses the Figma assets. Change content in index.html. */
-main { overflow:clip; }
+/* Animated paper must not become a browser scroll anchor while it moves. */
+main { overflow:clip; overflow-anchor:none; }
 section[id] { scroll-margin-top:30px; }
 a { color:inherit; text-underline-offset:4px; }
 .nav-preview a { text-decoration:none; }

@@ -14,7 +14,23 @@ const toggleButton = document.querySelector('#motion-toggle');
 const status = document.querySelector('#motion-status');
 let manuallyReduced = false;
 let motionContext;
+let motionHasInitialized=false;
+const motionRenderers=new Set();
+// Offset layout coordinates deliberately ignore paper rotation, entrance transforms and hover depth.
+function layoutTop(element) {
+  if(typeof element==='string') element=document.querySelector(element);
+  let top=0;
+  for(let node=element;node;node=node.offsetParent) top+=node.offsetTop;
+  return top;
+}
+function viewportStart(element,fraction) { return ()=>layoutTop(element)-innerHeight*fraction; }
+function layoutBottom(element) {
+  if(typeof element==='string') element=document.querySelector(element);
+  return layoutTop(element)+element.offsetHeight;
+}
 function configureMotion() {
+  motionHasInitialized=true;
+  motionRenderers.clear();
   dezodCleanup?.();
   depthCleanup?.();
   bodyRevealCleanup?.();
@@ -51,7 +67,6 @@ menuButton.addEventListener('click', () => {
   document.querySelector('#mobile-nav').hidden = !open;
   menuButton.querySelector('.menu-icon').classList.toggle('is-open',open);
 });
-configureMotion();
 // Scale wrappers while leaving the supplied SVG root dimensions intact.
 const svgObserver = new ResizeObserver(entries => {
   for (const {target} of entries) {
@@ -75,8 +90,8 @@ document.querySelectorAll('#mobile-nav a').forEach(link=>link.addEventListener('
 function lineTimeline(trigger, footer=false) {
   return gsap.timeline({scrollTrigger:{
     trigger,
-    start:footer ? 'clamp(top 95%)' : 'top 85%',
-    end:footer ? 'max' : 'bottom top',
+    start:footer ? ()=>Math.max(0,Math.min(layoutTop(trigger)-innerHeight*.95,ScrollTrigger.maxScroll(window)-1)) : viewportStart(trigger,.85),
+    end:footer ? 'max' : ()=>layoutBottom(trigger),
     scrub:LINE_MOTION.smoothing,
     invalidateOnRefresh:true
   }});
@@ -148,8 +163,9 @@ function typewriter(element, scroll=false, delay=0) {
     setClip(index===count ? 'inset(0 0 0 0)' : `inset(0 ${Math.max(0,textRect.width-width)}px 0 0)`);
     setCaret(`${Math.min(width,textRect.width)}px`);
   };
+  motionRenderers.add(()=>{last=-1;update();});
   const timeline=gsap.timeline({delay,scrollTrigger:scroll ? {
-    trigger:element,start:'top 88%',toggleActions:'play complete play reverse'
+    trigger:element,start:viewportStart(element,.88),end:()=>layoutBottom(element),toggleActions:'play complete play reverse'
   } : undefined});
   timeline.set(wrap,{'--typing-cursor':1})
     .to(progress,{letters:count,duration:count*STORY_MOTION.typingStep,ease:'none',snap:{letters:1},onUpdate:update})
@@ -238,10 +254,10 @@ function setupBodyLines() {
       }
       image(gradients.join(','));position(positions.join(','));size(sizes.join(','));
     };
-    measure();render();renders.set(paragraph,render);observer.observe(paragraph);
+    measure();render();renders.set(paragraph,render);motionRenderers.add(render);observer.observe(paragraph);
     const hero=paragraph.matches('.intro-copy p');
     gsap.to(state,{progress:1,duration:Math.min(1.35,.5+(count-1)*.11),ease:'none',delay:hero?.8:.12,onUpdate:render,
-      scrollTrigger:hero ? undefined : {trigger:paragraph,start:'top 92%',toggleActions:'play complete play reverse',onRefresh:render}
+      scrollTrigger:hero ? undefined : {trigger:paragraph,start:viewportStart(paragraph,.92),end:()=>layoutBottom(paragraph),toggleActions:'play complete play reverse',onRefresh:render}
     });
   }
   return ()=>{active=false;observer.disconnect();renders.clear();};
@@ -291,11 +307,11 @@ function setupDetailMotion() {
   depthCleanup=()=>removers.forEach(remove=>remove());
   gsap.from('.reflection-photo',{
     yPercent:65,opacity:0,duration:1.1,ease:'power3.out',
-    scrollTrigger:{trigger:'.reflection-photo',start:'top 92%',toggleActions:'play complete play reverse'}
+    scrollTrigger:{trigger:'.reflection-photo',start:viewportStart('.reflection-photo',.92),end:()=>layoutBottom('.reflection-photo'),toggleActions:'play complete play reverse'}
   });
   gsap.fromTo('.contact-paperclip',{rotation:-105},{
     rotation:-58.87,duration:1,ease:'power3.out',
-    scrollTrigger:{trigger:'.contact-paperclip',start:'top 90%',end:'bottom top',toggleActions:'play reverse play reverse'}
+    scrollTrigger:{trigger:'.contact-paperclip',start:viewportStart('.contact-paperclip',.90),end:()=>layoutBottom('.contact-paperclip'),toggleActions:'play reverse play reverse'}
   });
 }
 
@@ -308,7 +324,7 @@ function setupBubbleTrim() {
   gsap.set(original,{attr:{mask:'url(#bubble-trim-mask)'}});
   gsap.set(guide,{strokeDasharray:length,strokeDashoffset:length});
   gsap.set(full,{opacity:0});
-  gsap.timeline({scrollTrigger:{trigger:'.reflection-bubble',start:'top 90%',end:'top 32%',scrub:.8,invalidateOnRefresh:true}})
+  gsap.timeline({scrollTrigger:{trigger:'.reflection-bubble',start:viewportStart('.reflection-bubble',.90),end:viewportStart('.reflection-bubble',.32),scrub:.8,invalidateOnRefresh:true}})
     .to(guide,{strokeDashoffset:0,duration:.96,ease:'none'})
     .to(full,{opacity:1,duration:.04,ease:'none'});
 }
@@ -319,7 +335,7 @@ function setupPaperArrivals() {
   const arrive=(element,from,to={},footer=false)=>gsap.fromTo(element,from,{
     x:0,y:0,rotation:0,rotationY:0,scale:1,opacity:1,...to,
     ease:'power4.out',
-    scrollTrigger:{trigger:element,start:'top 95%',end:footer?'clamp(top 83%)':'top 76%',scrub:footer?.18:.24,invalidateOnRefresh:true}
+    scrollTrigger:{trigger:element,start:viewportStart(element,.95),end:viewportStart(element,footer?.83:.76),scrub:footer?.18:.24,invalidateOnRefresh:true}
   });
   for (const [selector,side,angle] of [
     ['.about-sheet',-1,-.9],['.works-content',1,.65],
@@ -336,7 +352,7 @@ function setupPaperArrivals() {
         rotation:()=>narrow()?-9:-13,scale:.97,opacity:0,transformOrigin:'35% 70%'
       },{
         x:0,y:0,rotation:base,scale:1,opacity:1,ease:'back.out(1.15)',
-        scrollTrigger:{trigger:element,start:'top 96%',end:'top 72%',scrub:.24,invalidateOnRefresh:true}
+        scrollTrigger:{trigger:element,start:viewportStart(element,.96),end:viewportStart(element,.72),scrub:.24,invalidateOnRefresh:true}
       });
       continue;
     }
@@ -356,7 +372,7 @@ function setupPaperArrivals() {
       rotation:()=>direction()*5,scale:.95,opacity:.12
     },{
       x:0,y:0,rotation:0,scale:1,opacity:1,ease:'power1.out',
-      scrollTrigger:{trigger:card,start:()=>`top ${98-(index%columns())*.5}%`,end:'top 46%',scrub:.85,invalidateOnRefresh:true}
+      scrollTrigger:{trigger:card,start:()=>layoutTop(card)-innerHeight*(.98-(index%columns())*.005),end:viewportStart(card,.46),scrub:.85,invalidateOnRefresh:true}
     });
   });
   document.querySelectorAll('.shoutout-card,.shoutout-logo').forEach((card,index)=>{
@@ -365,13 +381,13 @@ function setupPaperArrivals() {
       rotation:5+(index%3)*1.5,rotationY:-6,scale:.97,opacity:.12
     },{
       x:0,y:0,rotation:0,rotationY:0,scale:1,opacity:1,ease:'power1.out',
-      scrollTrigger:{trigger:card,start:'top 98%',end:'top 46%',scrub:.9,invalidateOnRefresh:true}
+      scrollTrigger:{trigger:card,start:viewportStart(card,.98),end:viewportStart(card,.46),scrub:.9,invalidateOnRefresh:true}
     });
   });
   const footer=document.querySelector('.site-footer');
   const footerSlot=footer.closest('.footer-arrival-slot');
   gsap.timeline({scrollTrigger:{
-    id:'footer-paper-arrival',trigger:footerSlot,start:'top 88%',end:'clamp(bottom bottom)',
+    id:'footer-paper-arrival',trigger:footerSlot,start:viewportStart(footerSlot,.88),end:()=>Math.min(layoutBottom(footerSlot)-innerHeight,ScrollTrigger.maxScroll(window)),
     scrub:1,invalidateOnRefresh:true
   }})
     .fromTo(footer,{
@@ -383,27 +399,96 @@ function setupPaperArrivals() {
     .to(footer,{rotation:0,duration:.18,ease:'sine.out'});
 }
 
-// Keep viewport triggers aligned after the local typefaces finish loading.
-document.fonts.ready.then(()=>window.ScrollTrigger?.refresh());
-// Recalculate after images and browser scroll restoration settle on reload/back navigation.
-window.addEventListener('load',()=>window.ScrollTrigger?.refresh());
-window.addEventListener('pageshow',()=>requestAnimationFrame(()=>requestAnimationFrame(()=>window.ScrollTrigger?.refresh())));
+// Initialize after real fonts, image layout and native scroll restoration are ready.
+// A refresh alone does not repaint custom text masks or reconcile skipped toggle callbacks.
+function synchronizeMotionToScroll() {
+  if(!window.ScrollTrigger || reducedMotion.matches || manuallyReduced) return;
+  ScrollTrigger.update();
+  for(const trigger of ScrollTrigger.getAll()) {
+    const animation=trigger.animation;
+    if(!animation)continue;
+    if(trigger.vars.scrub) {
+      trigger.getTween()?.progress(1);
+      animation.totalProgress(trigger.progress,false);
+    } else if(trigger.progress===1) {
+      animation.totalProgress(1,false).pause();
+    } else if(trigger.scroll()<trigger.start) {
+      animation.pause(0,false);
+    } else if(animation.totalProgress()<1) {
+      animation.play();
+    }
+  }
+  motionRenderers.forEach(render=>render());
+}
+// A reload fallback stays in this tab only. Fresh visits and new anchor links
+// still use normal browser navigation; no page position is sent or stored remotely.
+const navigationType=performance.getEntriesByType('navigation')[0]?.type;
+const scrollStorageKey=()=>`fabrice-scroll:${location.pathname}${location.search}${location.hash}`;
+function readReloadPosition() {
+  if(navigationType!=='reload')return null;
+  try {
+    const position=JSON.parse(sessionStorage.getItem(scrollStorageKey()));
+    return Number.isFinite(position?.y) && Number.isFinite(position?.x) ? position : null;
+  } catch { return null; }
+}
+function rememberScrollPosition() {
+  try {sessionStorage.setItem(scrollStorageKey(),JSON.stringify({x:scrollX,y:scrollY}));} catch { /* Native restoration remains available if tab storage is disabled. */ }
+}
+window.addEventListener('pagehide',rememberScrollPosition);
+window.addEventListener('beforeunload',rememberScrollPosition);
+let layoutRefreshTimer;
+function refreshMotionLayout() {
+  if(!motionHasInitialized || !window.ScrollTrigger)return;
+  const x=scrollX,y=scrollY;
+  const root=document.documentElement;
+  const behavior=root.style.getPropertyValue('scroll-behavior');
+  const priority=root.style.getPropertyPriority('scroll-behavior');
+  // Refresh temporarily visits scroll zero internally. It must never smooth-scroll
+  // there, or overwrite the visitor's restored position while measurements run.
+  root.style.setProperty('scroll-behavior','auto','important');
+  ScrollTrigger.refresh();
+  window.scrollTo({left:x,top:y,behavior:'instant'});
+  synchronizeMotionToScroll();
+  if(behavior)root.style.setProperty('scroll-behavior',behavior,priority);
+  else root.style.removeProperty('scroll-behavior');
+}
+function queueMotionRefresh() {
+  if(!motionHasInitialized)return;
+  clearTimeout(layoutRefreshTimer);
+  layoutRefreshTimer=setTimeout(()=>{layoutRefreshTimer=null;requestAnimationFrame(refreshMotionLayout);},100);
+}
+const nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
+const pageLoaded=document.readyState==='complete' ? Promise.resolve() : new Promise(resolve=>window.addEventListener('load',resolve,{once:true}));
+Promise.all([document.fonts.ready,pageLoaded]).then(async()=>{
+  await nextFrame();await nextFrame();
+  const restoredPosition=readReloadPosition();
+  const initialPosition=restoredPosition || {x:scrollX,y:scrollY};
+  if(restoredPosition)window.scrollTo({left:initialPosition.x,top:initialPosition.y,behavior:'instant'});
+  configureMotion();
+  // Building from() entrances must not change the restored viewport.
+  window.scrollTo({left:initialPosition.x,top:initialPosition.y,behavior:'instant'});
+  refreshMotionLayout();
+  // Follow native restoration without forcing the visitor to scroll or resetting their position.
+  await nextFrame();refreshMotionLayout();
+});
+window.addEventListener('pageshow',()=>{requestAnimationFrame(()=>requestAnimationFrame(queueMotionRefresh));});
+// Let native smooth anchor navigation finish before a pending image/layout refresh.
+window.addEventListener('scroll',()=>{if(layoutRefreshTimer)queueMotionRefresh();},{passive:true});
+document.addEventListener('load',event=>{if(event.target instanceof HTMLImageElement)queueMotionRefresh();},true);
+const pageLayoutObserver=new ResizeObserver(queueMotionRefresh);
+pageLayoutObserver.observe(document.querySelector('main'));
+if(window.ScrollTrigger)ScrollTrigger.addEventListener('refresh',()=>motionRenderers.forEach(render=>render()));
 
 // The camera moves inward while the original logo pieces resolve into place.
 function setupDezodSpotlight() {
   const section=document.querySelector('.dezod-spotlight');
-  const stage=section.querySelector('.dezod-stage');
   const frame=section.querySelector('.dezod-logo-frame');
   const logoPieces=[...frame.querySelectorAll('g > path')];
   const patternPieces=[...section.querySelectorAll('.dezod-pattern > path')];
   // Keep the paper in normal document flow: no pin spacer can separate it from its heading.
   const scene=gsap.timeline({scrollTrigger:{
-    id:'dezod-assembly',trigger:section,start:'top 82%',end:'top 28%',
-    scrub:.45,invalidateOnRefresh:true,
-    onRefresh:self=>{
-      self.getTween()?.pause();
-      self.animation?.totalProgress(self.progress,false);
-    }
+    id:'dezod-assembly',trigger:section,start:viewportStart(section,.82),end:viewportStart(section,.28),
+    scrub:.45,invalidateOnRefresh:true
   }});
   scene.fromTo(frame,{scale:.64,z:-140,y:24},{scale:1,z:0,y:0,duration:.60,ease:'power2.out'},0);
   logoPieces.forEach((piece,index)=>{
@@ -455,6 +540,7 @@ function setupDezodSpotlight() {
     }
   };
   render();
+  motionRenderers.add(()=>{last=-1;render();});
   const observer=new ResizeObserver(()=>{last=-1;render();});observer.observe(paragraph);
   scene.to(state,{letters:count,duration,ease:'none',onUpdate:render},start);
   cleanups.push(()=>{active=false;observer.disconnect();words.forEach(word=>{word.style.removeProperty('opacity');word.style.removeProperty('clip-path');});});
@@ -480,6 +566,7 @@ function setupDezodSpotlight() {
     paragraph.style.maskPosition=positions.join(',');paragraph.style.maskSize=sizes.join(',');
   };
   renderLines();
+  motionRenderers.add(renderLines);
   const lineObserver=new ResizeObserver(renderLines);lineObserver.observe(paragraph);
   scene.to(state,{progress:1,duration:.32,ease:'none',onUpdate:renderLines},.56);
   cleanups.push(()=>{active=false;lineObserver.disconnect();paragraph.style.removeProperty('mask-image');paragraph.style.removeProperty('mask-position');paragraph.style.removeProperty('mask-size');});
