@@ -14,8 +14,15 @@
 .hero-title-word { display:inline-block; }
 
 /* Independent transform properties keep hover depth separate from entrance motion. */
-.works-collage,.media-stack,.shoutouts-people,.shoutouts-second-row,.shoutouts-initiatives { perspective:1000px; }
+.works-collage,.media-stack,.shoutouts-people,.shoutouts-second-row,.shoutouts-third-row,.shoutouts-initiatives { perspective:1000px; }
 .depth-card { rotate:var(--tilt-x,1) var(--tilt-y,0) 0 var(--tilt-angle,0deg); translate:0 0 var(--hover-depth,0px); scale:var(--hover-scale,1); position:relative; }
+/* GSAP normalizes individual transforms inline during scroll entrances.
+   Keep pointer tilt independent while its transform handles the arrival. */
+.shoutout-card.depth-card,.shoutout-logo.depth-card {
+ rotate:var(--tilt-x,1) var(--tilt-y,0) 0 var(--tilt-angle,0deg) !important;
+ translate:0 0 var(--hover-depth,0px) !important;
+ scale:var(--hover-scale,1) !important;
+}
 .work-item-link { position:absolute; inset:0; z-index:5; }
 .work-item-link:focus-visible { outline:3px solid var(--ink); outline-offset:-4px; border-radius:4px; }
 @media(prefers-reduced-motion:no-preference) {
@@ -27,8 +34,8 @@
 @keyframes work-float { 0%,100% { translate:0 calc(-1 * var(--hover-lift,0px)) var(--hover-depth,0px); } 50% { translate:0 calc(-4px - var(--hover-lift,0px)) var(--hover-depth,0px); } }
 .shoutout-photo::after,.shoutout-logo::after { content:''; position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at var(--shine-x,50%) var(--shine-y,50%),#ffffff38,transparent 65%); opacity:var(--shine-opacity,0); transition:opacity .25s; }
 .shoutout-photo::after { mask-image:var(--portrait-mask); mask-size:cover; mask-position:center; }
-.motion-reduced .depth-card { animation:none; rotate:none; translate:none; }
-@media(prefers-reduced-motion:reduce) { .depth-card { animation:none; rotate:none; translate:none; } }
+.motion-reduced .depth-card { animation:none; rotate:none !important; translate:none !important; scale:1 !important; }
+@media(prefers-reduced-motion:reduce) { .depth-card { animation:none; rotate:none !important; translate:none !important; scale:1 !important; } }
 
 .current-projects { position:absolute; top:10px; left:5%; right:5%; display:flex; justify-content:center; align-items:start; gap:34px; z-index:3; }
 .project-badge { display:flex; flex-direction:column; gap:10px; align-items:center; width:140px; text-decoration:none; color:var(--lime); font-size:15px; font-weight:600; text-align:center; }
