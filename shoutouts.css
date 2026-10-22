@@ -69,3 +69,16 @@
  .initiative-name { font-size:12px; }
 }
 @media(max-width:360px) { .initiative-mark { width:60px;height:64px; }.initiative-mark.larue-mark { width:124px;height:64px; }.shoutouts-initiatives { gap:8px; } }
+
+/* Give group cutouts a full mobile row so individual faces keep their scale. */
+@media(max-width:575px) {
+ .shoutouts-gallery { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:28px 24px; align-items:end; }
+ .shoutouts-people { grid-column:1 / -1; }
+ .shoutouts-second-row,.shoutouts-third-row { display:contents; }
+ .shoutouts-second-row .shoutout-card:first-child { grid-column:1; grid-row:2; width:100%; max-width:180px; justify-self:center; }
+ .shoutouts-third-row .shoutout-card:first-child { grid-column:2; grid-row:2; }
+ .shoutouts-second-row .shoutout-card:last-child { grid-column:1 / -1; grid-row:3; width:100%; }
+ .shoutouts-third-row .shoutout-card:last-child { grid-column:1 / -1; grid-row:4; width:86%; max-width:400px; }
+ .shoutouts-second-row .shoutout-name,.shoutouts-third-row .shoutout-name { font-size:16px; }
+ .shoutouts-initiatives { grid-column:1 / -1; margin-top:0; }
+}
