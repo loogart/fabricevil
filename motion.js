@@ -505,47 +505,6 @@ function setupDezodSpotlight() {
   scene.fromTo(section.querySelector('.dezod-story'),{y:14},{y:0,duration:.4,ease:'power2.out'},.42);
 
   const cleanups=[];
-  const addTyping=(paragraph,start,duration)=>{
-  let visual=paragraph.querySelector('.dezod-story-visual');
-  if (!visual) {
-    const text=paragraph.textContent;
-    const accessible=document.createElement('span');accessible.className='visually-hidden';accessible.textContent=text;
-    visual=document.createElement('span');visual.className='dezod-story-visual';visual.setAttribute('aria-hidden','true');
-    for (const token of text.split(/(\s+)/)) {
-      if (!token) continue;
-      if (/^\s+$/.test(token)) { visual.append(document.createTextNode(token));continue; }
-      const word=document.createElement('span');word.className='dezod-story-word';word.textContent=token;visual.append(word);
-    }
-    paragraph.replaceChildren(accessible,visual);
-  }
-  const words=[...visual.querySelectorAll('.dezod-story-word')];
-  const count=words.reduce((sum,word)=>sum+word.textContent.length+1,0);
-  const state={letters:0};let active=true,last=-1;
-  const range=document.createRange();
-  const render=()=>{
-    if (!active) return;
-    const letters=Math.round(state.letters);if(letters===last)return;last=letters;
-    let offset=0;
-    for(const word of words){
-      const length=word.textContent.length;
-      const revealed=Math.max(0,Math.min(length,letters-offset));
-      word.style.opacity=revealed?'1':'0';
-      if(revealed===length)word.style.clipPath='none';
-      else if(revealed){
-        range.setStart(word.firstChild,0);range.setEnd(word.firstChild,revealed);
-        const box=word.getBoundingClientRect();
-        word.style.clipPath=`inset(0 ${Math.max(0,box.width-range.getBoundingClientRect().width)}px 0 0)`;
-      }else word.style.clipPath='inset(0 100% 0 0)';
-      offset+=length+1;
-    }
-  };
-  render();
-  motionRenderers.add(()=>{last=-1;render();});
-  const observer=new ResizeObserver(()=>{last=-1;render();});observer.observe(paragraph);
-  scene.to(state,{letters:count,duration,ease:'none',onUpdate:render},start);
-  cleanups.push(()=>{active=false;observer.disconnect();words.forEach(word=>{word.style.removeProperty('opacity');word.style.removeProperty('clip-path');});});
-  };
-  addTyping(section.querySelector('.dezod-story-kicker'),.4,.18);
   // Keep prose intact and fade its natural lines, rather than typing every character.
   const paragraph=section.querySelector('.dezod-scroll-copy');
   const state={progress:0};let active=true;
