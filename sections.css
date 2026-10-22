@@ -185,3 +185,7 @@ body.motion-reduced,body.motion-reduced * { scroll-behavior:auto !important; }
 
 /* Keep the native email and its marker text perfectly aligned and centred. */
 .contact-email a,.email-ink { text-align:center; }
+
+/* Preserve the supplied Ados et armés composition inside the existing browser artwork. */
+.browser-screen { object-fit:contain; background:#15252d; }
+.partner-logo { object-fit:contain; max-height:72px; }

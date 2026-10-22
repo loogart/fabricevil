@@ -1,0 +1,48 @@
+{
+  "ados-et-armes-clean.jpg": {
+    "source": "User-supplied P0000603360_Unique_16x9_AvecLogoSansMarque.jpg",
+    "treatment": "Original file; contained in existing browser illustration via CSS"
+  },
+  "logo-mcgill.svg": {
+    "source": "https://www.mcgill.ca/sites/all/themes/moriarty/images/logo-red.svg"
+  },
+  "logo-udem.svg": {
+    "source": "https://www.umontreal.ca/",
+    "asset": "Exact inline SVG decoded from .udem-logo-udem in the official website stylesheet"
+  },
+  "logo-brebeuf.svg": {
+    "source": "https://www.brebeuf.qc.ca/wp-content/themes/sage-8.4.2/assets/images/logo-brebeuf-bourgogne.svg"
+  },
+  "logo-education-quebec.png": {
+    "source": "https://commons.wikimedia.org/wiki/File:Logo_du_Minist%C3%A8re_de_l%27%C3%89ducation_(Qu%C3%A9bec).png",
+    "origin": "Government of Quebec logo, sourced by Commons from education.gouv.qc.ca"
+  },
+  "la-rue-inspire-white.svg": {
+    "source": "https://www.larueinspire.com/",
+    "asset": "https://cdn.prod.website-files.com/67b4c3e67891fe7708bb28b5/67c612fd79aa58b9e0be7786_LRI_White-Logo.svg"
+  },
+  "shoutout-bonnitta.jpg": {
+    "source": "https://substack.com/@bonnittaroy",
+    "pixels": [
+      561,
+      692
+    ],
+    "treatment": "Source photo, temporary framed preview pending designer cutout"
+  },
+  "shoutout-fred-moten.jpg": {
+    "source": "https://tisch.nyu.edu/about/directory/performance-studies/3144950.html",
+    "pixels": [
+      899,
+      914
+    ],
+    "treatment": "Source photo, temporary framed preview pending designer cutout"
+  },
+  "shoutout-stefano-harney.jpg": {
+    "source": "https://en.khm.de/personen/id.30221.prof-dr-stefano-harney/",
+    "pixels": [
+      448,
+      449
+    ],
+    "treatment": "Source photo, temporary framed preview pending designer cutout"
+  }
+}
