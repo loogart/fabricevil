@@ -49,14 +49,10 @@
 }
 @media(max-width:360px) { .shoutouts-initiatives { gap:16px; }.shoutout-logo { width:68px; height:68px; } }
 
-/* Source photographs are temporary paper prints; Figma cutouts can replace them later. */
+/* Client-created paper cutouts retain their original transparent edges. */
 .shoutouts-third-row { display:grid; grid-template-columns:190fr 370fr; align-items:end; gap:38px; margin-top:34px; }
 .shoutouts-third-row .shoutout-card:first-child { width:100%; max-width:180px; justify-self:center; }
 .shoutouts-third-row .shoutout-card:last-child { width:100%; max-width:360px; justify-self:center; }
-.portrait-frame { border:6px solid #f1eee5; background:#f1eee5; overflow:hidden; }
-.portrait-frame img { object-position:center 30%; }
-.portrait-pair { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
-.portrait-pair img { position:static; width:100%; height:100%; min-height:0; object-fit:cover; object-position:center top; }
 .shoutouts-initiatives { gap:22px; align-items:start; }
 .shoutout-logo.initiative-card { width:auto; height:auto; border-radius:0; background:transparent; overflow:visible; display:flex; flex-direction:column; align-items:center; gap:12px; color:white; text-decoration:none; }
 .initiative-mark { position:relative; display:block; width:94px; height:94px; overflow:hidden; background:#f7f4ea; clip-path:polygon(1% 1%,98% 0,100% 97%,2% 100%,0 3%); }
@@ -67,8 +63,6 @@
 @media(max-width:575px) {
  .shoutouts-third-row { grid-template-columns:minmax(0,.85fr) minmax(0,1.5fr); gap:18px; margin-top:28px; }
  .shoutouts-third-row .shoutout-name { font-size:15px; }
- .portrait-frame { border-width:4px; }
- .portrait-pair { gap:4px; }
  .shoutouts-initiatives { gap:12px; justify-content:space-between; }
  .initiative-mark { width:72px; height:72px; }
  .initiative-mark.larue-mark { width:138px; padding:10px; }
