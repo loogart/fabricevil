@@ -127,3 +127,11 @@ h1 { font-size:clamp(54px,5.56vw,88px); line-height:.9; font-weight:600; letter-
 .speaker-invitation:hover span { text-decoration:underline; text-underline-offset:4px; }
 @media(max-width:575px) { .speaker-invitation { font-size:17px; padding:21px 19px 17px; margin-top:30px; } }
 @media(prefers-reduced-motion:reduce) { .speaker-invitation { transition:none; }.speaker-invitation:hover { transform:rotate(-2deg); } }
+
+/* On phones the invitation follows the character, keeping one shared CTA. */
+@media(max-width:767px) {
+ .hero-body .intro-copy { display:contents; }
+ .hero-body .intro-copy h1,.hero-body .intro-copy p { order:0; width:100%; }
+ .hero-body .character-column { order:1; }
+ .hero-body .speaker-invitation { order:2; width:fit-content; max-width:calc(100% - 8px); margin:28px auto 8px; }
+}
