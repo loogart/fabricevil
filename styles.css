@@ -118,3 +118,12 @@ h1 { font-size:clamp(54px,5.56vw,88px); line-height:.9; font-weight:600; letter-
 @media(min-width:992px) and (max-width:1250px) { .speech-bubble { top:7px; } }
 @media(min-width:768px) and (max-width:991px) { .speech-bubble::after { width:24px; height:22px; } }
 @media(max-width:767px) { .speech-bubble::after { width:24px; height:21px; } }
+
+/* A small pinned note invites speaking enquiries from the introduction. */
+.speaker-invitation { position:relative; display:inline-flex; align-items:center; gap:18px; max-width:100%; margin:32px 0 0 3px; padding:22px 22px 18px; background:linear-gradient(115deg,#d7ff6999,#d7ff69dd),url('assets/paper-grid.png') center/350px; color:var(--ink); font-size:18px; font-weight:600; line-height:1.35; text-decoration:none; border-radius:1px 2px 2px 1px; box-shadow:0 1px 1px #183b3820,3px 6px 7px -3px #183b3840; transform:rotate(-2deg); transform-origin:28px 0; transition:transform .25s ease,box-shadow .25s ease; }
+.speaker-invitation .invitation-arrow { width:20px; height:20px; flex-shrink:0; }
+.speaker-invitation .invitation-pin { position:absolute; width:30px; height:38px; left:13px; top:-16px; pointer-events:none; filter:drop-shadow(1px 2px 1px #183b3830); }
+.speaker-invitation:hover { color:var(--ink); transform:rotate(-.5deg) translateY(-1px); box-shadow:0 1px 1px #183b3820,5px 9px 10px -3px #183b3845; }
+.speaker-invitation:hover span { text-decoration:underline; text-underline-offset:4px; }
+@media(max-width:575px) { .speaker-invitation { font-size:17px; padding:21px 19px 17px; margin-top:30px; } }
+@media(prefers-reduced-motion:reduce) { .speaker-invitation { transition:none; }.speaker-invitation:hover { transform:rotate(-2deg); } }
