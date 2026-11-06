@@ -62,7 +62,7 @@ Scroll triggers now follow the actual heading, email marker, and Réflexions doo
 
 ## Browser and sharing assets
 
-The supplied images are installed without alteration: assets/favicon.png (64×64), assets/webclip.png (512×512), and assets/og-image.png (2400×1260). index.html declares the PNG favicon, Apple touch icon, and Open Graph/Twitter large-image metadata. Canonical and sharing URLs use https://fabricevil.com/. Public social previews become available when this version and its assets are deployed to that domain.
+The browser and sharing assets are: assets/favicon.png (64×64), assets/webclip.png (512×512), and assets/og-image.jpg (2400×1260). index.html declares the PNG favicon, Apple touch icon, and Open Graph/Twitter large-image metadata. Canonical and sharing URLs use https://fabricevil.com/. Public social previews become available when this version and its assets are deployed to that domain.
 
 
 ## Story motion exploration
@@ -99,3 +99,17 @@ An inset textured black paper surface with irregular torn edges shares the width
 Motion initializes after fonts and initial image layout settle. Viewport ranges use untransformed layout coordinates, keeping paper entrances, portraits, partner logos, trim paths and footer lines stable across reloads. A shared synchronization pass reconciles scrubbed timelines, skipped entrance callbacks and custom text masks with the actual scroll position. Image loads and layout changes schedule a debounced refresh without moving the viewport.
 
 A tab-local sessionStorage fallback preserves the current position on reload if native browser restoration falls back to the top. It is only applied on reload of the exact same path/query/hash; fresh visits and direct section links retain normal navigation. Reduced motion continues to show complete static content.
+
+
+## Search and answer-engine readiness
+
+The homepage uses a descriptive French-Canadian title and description, consistent sharing metadata, a canonical production URL, and JSON-LD linking the website, profile page, Fabrice’s identity, official social profiles and portrait. Structured claims match the visible biography; keep these together when updating copy. The creative hero H1 is preserved.
+
+`robots.txt` permits crawling and points to `sitemap.xml`. The sitemap contains the canonical homepage only; section anchors are not separate pages. Update its last-modified date only after substantive page changes. All primary content and contact details remain in HTML without requiring animation or JavaScript.
+
+After an approved deployment, submit `https://fabricevil.com/sitemap.xml` through Google Search Console and Bing Webmaster Tools, inspect the homepage, and run Google’s Rich Results Test on the published URL. Ownership verification, submission and ranking monitoring have not been performed. Search/AI inclusion is not guaranteed by markup.
+
+References: [Google’s AI search guidance](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide), [ProfilePage guidance](https://developers.google.com/search/docs/appearance/structured-data/profile-page), [structured-data policies](https://developers.google.com/search/docs/appearance/structured-data/sd-policies).
+
+
+Unused image cleanup: superseded PNG/JPEG originals, old portrait sources and unused logo/SVG assets have been removed after checking reachable HTML, CSS, JavaScript and SVG dependencies. Active imagery uses the optimized files; the hero character remains the original SVG. The footer Facebook mark is inline SVG.
