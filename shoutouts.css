@@ -1,6 +1,6 @@
 /* Shoutouts: the green grid and original portraits come directly from Figma. */
 .shoutouts { position:relative; background:#006461; color:white; overflow:hidden; padding:105px 0; }
-.shoutouts::before { content:''; position:absolute; inset:-15% -15%; background:url('assets/shoutouts-grid.png') center/cover no-repeat; transform:rotate(2.46deg); pointer-events:none; }
+.shoutouts::before { content:''; position:absolute; inset:-15% -15%; background:url('assets/shoutouts-grid.webp') center/cover no-repeat; transform:rotate(2.46deg); pointer-events:none; }
 .shoutouts-inner { position:relative; display:grid; grid-template-columns:minmax(0,.38fr) minmax(0,.62fr); align-items:center; gap:30px; }
 .shoutouts-copy h2 { color:var(--lime); margin-bottom:20px; line-height:1; }
 .shoutouts-copy p { font-size:var(--body-size); line-height:var(--body-leading); font-weight:500; margin:0; max-width:45ch; }

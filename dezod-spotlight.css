@@ -1,7 +1,7 @@
 /* An inset screen mounted on paper within Expériences. */
 .dezod-spotlight { position:relative; filter:drop-shadow(0 5px 5px #0003); transform:rotate(-.65deg); }
 .dezod-stage { position:relative; isolation:isolate; overflow:hidden; display:flex; align-items:center; gap:48px; padding:46px 52px; background:#090909; color:#fff; perspective:1000px; mask:url('assets/dezod-paper-mask.svg') center/100% 100% no-repeat; }
-.dezod-stage::before { content:''; position:absolute; inset:0; background:url('assets/paper-base.png') center/cover; opacity:.13; mix-blend-mode:screen; pointer-events:none; }
+.dezod-stage::before { content:''; position:absolute; inset:0; background:url('assets/paper-base.webp') center/cover; opacity:.13; mix-blend-mode:screen; pointer-events:none; }
 .dezod-patterns { position:absolute; inset:0; pointer-events:none; opacity:.55; mask-image:radial-gradient(ellipse 42% 65% at center,transparent 35%,#000 100%); }
 .dezod-pattern { position:absolute; top:0; height:100%; width:auto; max-width:none; overflow:visible; }
 .dezod-pattern-left { left:-6%; }

@@ -2,12 +2,16 @@
 * { box-sizing:border-box; }
 html { scroll-behavior:smooth; }
 body { margin:0; background:var(--paper); color:var(--ink); font-family:'IBM Plex Serif', Georgia, serif; font-size:var(--body-size); line-height:var(--body-leading); font-weight:500; }
-body::before { content:''; position:fixed; inset:0; background:url('assets/paper-base.png') center/cover; opacity:.3; pointer-events:none; z-index:-1; }
+body::before { content:''; position:fixed; inset:0; background:url('assets/paper-base.webp') center/cover; opacity:.3; pointer-events:none; z-index:-1; }
 button,a { -webkit-tap-highlight-color:transparent; }
 button:focus-visible,a:focus-visible { outline:3px solid var(--ink); outline-offset:5px; }
 .skip-link { position:fixed; left:20px; top:-100px; z-index:10; background:var(--lime); color:var(--ink); padding:12px; }
 .skip-link:focus { top:10px; }
-.hero-paper { position:relative; margin:20px auto 0; width:calc(100% - 50px); max-width:1580px; min-height:759px; overflow:hidden; background:url('assets/paper-grid.png') left top/100% auto; box-shadow:0 8px 12px #00000040; transform-origin:center top; }
+.hero-paper { position:relative; margin:20px auto 0; width:calc(100% - 50px); max-width:1580px; min-height:759px; overflow:hidden; background:url('assets/paper-grid.webp') left top/100% auto; box-shadow:0 8px 12px #00000040; transform-origin:center top; }
+/* The sheet arrives with its first paint, independently of script or image loading. */
+.hero-paper { background-color:#f2f1ec; animation:hero-paper-arrive .65s cubic-bezier(.2,.7,.3,1) both; }
+@keyframes hero-paper-arrive { from { transform:translate(-8px,24px) rotate(-.65deg); } to { transform:none; } }
+@media(prefers-reduced-motion:reduce) { .hero-paper { animation:none; } }
 .hero-inner { padding:0 74px; position:relative; z-index:1; }
 .paper-accent { position:absolute; left:-64px; top:-188px; pointer-events:none; z-index:0; mix-blend-mode: multiply;filter: contrast(1.05) saturate(0.95); opacity:.9;}
 .paper-accent img { display:block; max-width:none; }
@@ -120,7 +124,7 @@ h1 { font-size:clamp(54px,5.56vw,88px); line-height:.9; font-weight:600; letter-
 @media(max-width:767px) { .speech-bubble::after { width:24px; height:21px; } }
 
 /* A small pinned note invites speaking enquiries from the introduction. */
-.speaker-invitation { position:relative; display:inline-flex; align-items:center; gap:18px; max-width:100%; margin:32px 0 0 3px; padding:22px 22px 18px; background:linear-gradient(115deg,#d7ff6999,#d7ff69dd),url('assets/paper-grid.png') center/350px; color:var(--ink); font-size:18px; font-weight:600; line-height:1.35; text-decoration:none; border-radius:1px 2px 2px 1px; box-shadow:0 1px 1px #183b3820,3px 6px 7px -3px #183b3840; transform:rotate(-2deg); transform-origin:28px 0; transition:transform .25s ease,box-shadow .25s ease; }
+.speaker-invitation { position:relative; display:inline-flex; align-items:center; gap:18px; max-width:100%; margin:32px 0 0 3px; padding:22px 22px 18px; background:linear-gradient(115deg,#d7ff6999,#d7ff69dd),url('assets/paper-grid.webp') center/350px; color:var(--ink); font-size:18px; font-weight:600; line-height:1.35; text-decoration:none; border-radius:1px 2px 2px 1px; box-shadow:0 1px 1px #183b3820,3px 6px 7px -3px #183b3840; transform:rotate(-2deg); transform-origin:28px 0; transition:transform .25s ease,box-shadow .25s ease; }
 .speaker-invitation .invitation-arrow { width:20px; height:20px; flex-shrink:0; }
 .speaker-invitation .invitation-pin { position:absolute; width:30px; height:38px; left:13px; top:-16px; pointer-events:none; filter:drop-shadow(1px 2px 1px #183b3830); }
 .speaker-invitation:hover { color:var(--ink); transform:rotate(-.5deg) translateY(-1px); box-shadow:0 1px 1px #183b3820,5px 9px 10px -3px #183b3845; }

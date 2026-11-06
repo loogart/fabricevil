@@ -1,9 +1,37 @@
 /* Edit motion settings here; the character artwork is never transformed. */
-const HERO_MOTION = { duration:2.2, delay:.18 };
+setupLoogartCreditAvatar();
+function setupLoogartCreditAvatar() {
+  if(!matchMedia('(hover:hover) and (pointer:fine)').matches)return;
+  const link=document.querySelector('.footer-bottom a[href="https://loogart.com"]');
+  if(!link)return;
+  const credit=link.closest('p');
+  const avatar=document.createElement('span');
+  avatar.className='loogart-credit-avatar';avatar.setAttribute('aria-hidden','true');
+  avatar.innerHTML='<img width="54" height="54" alt="" decoding="async"><svg viewBox="0 0 66 66" fill="none" focusable="false"><path d="M33 3C49 1 63 15 62 32C65 48 50 63 33 62C16 65 2 49 4 33C1 17 16 2 33 3Z" stroke="#efff00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 8C27 0 46 4 56 16C66 29 61 48 49 57C36 66 18 59 10 49" stroke="#f8ff59" stroke-width="1.3" stroke-linecap="round"/></svg>';
+  document.body.append(avatar);
+  const image=avatar.querySelector('img');
+  const show=(x,y)=>{
+    if(!image.getAttribute('src'))image.src='assets/loogart-avatar.webp';
+    avatar.style.left=Math.max(8,Math.min(innerWidth-74,x+12))+'px';
+    avatar.style.top=Math.max(8,Math.min(innerHeight-74,y+16))+'px';
+    avatar.classList.add('is-visible');
+  };
+  const hide=()=>avatar.classList.remove('is-visible');
+  credit.addEventListener('pointerenter',event=>show(event.clientX,event.clientY));
+  credit.addEventListener('pointermove',event=>show(event.clientX,event.clientY));
+  credit.addEventListener('pointerleave',hide);
+  link.addEventListener('focus',()=>{const r=link.getBoundingClientRect();show(r.left+r.width/2,r.bottom);});
+  link.addEventListener('blur',hide);
+  window.addEventListener('scroll',hide,{passive:true});
+  window.addEventListener('blur',hide);
+}
+const HERO_MOTION = { duration:2.7, delay:.08 };
+// A late script must never hide or reanimate a first screen already being read.
+const heroFirstPaint=performance.getEntriesByType('paint').find(entry=>entry.name==='first-contentful-paint');
+const animateHeroOnLoad=!heroFirstPaint || performance.now()-heroFirstPaint.startTime<350;
 let heroHasPlayed=false;
 const STORY_MOTION = { enabled:true, typingStep:.075, entrance:.75, travel:12 };
 let greetingHasPlayed=false;
-let heroPaperHasPlayed=false;
 let heroTitleHasPlayed=false;
 let bodyRevealCleanup;
 let depthCleanup;
@@ -123,11 +151,21 @@ function setupScrollLines() {
 function setupHeroIntro() {
   if (heroHasPlayed) return;
   heroHasPlayed=true;
+  if(!animateHeroOnLoad)return;
   const hidden='inset(0 100% 0 0)';
   const shown='inset(0 0% 0 0)';
+  const guide=document.querySelector('#hero-marker-guide');
+  const original=document.querySelector('#hero-marker-original');
+  const full=document.querySelector('#hero-marker-full');
+  const length=guide.getTotalLength();
+  // Trace a centreline mask; keep the original textured marker artwork intact.
+  gsap.set(original,{attr:{mask:'url(#hero-marker-mask)'}});
+  gsap.set(guide,{strokeDasharray:length,strokeDashoffset:length});
+  gsap.set(full,{attr:{opacity:0}});
   gsap.timeline({delay:HERO_MOTION.delay})
-    .fromTo('.paper-accent',{clipPath:hidden},{clipPath:shown,duration:HERO_MOTION.duration,ease:'power1.inOut'},0)
-    .fromTo('.rule-wrap',{clipPath:hidden},{clipPath:shown,duration:1.35,ease:'power1.inOut'},.3);
+    .to(guide,{strokeDashoffset:0,duration:HERO_MOTION.duration,ease:'power2.out'},0)
+    .set(full,{attr:{opacity:1}},HERO_MOTION.duration)
+    .fromTo('.rule-wrap',{clipPath:hidden},{clipPath:shown,duration:.8,ease:'power1.inOut'},.1);
 }
 
 // A measured glyph reveal avoids changing line breaks or creating a span per letter.
@@ -174,7 +212,8 @@ function typewriter(element, scroll=false, delay=0) {
 function setupGreeting() {
   if (greetingHasPlayed) return;
   greetingHasPlayed=true;
-  typewriter(document.querySelector('.speech-bubble'),false,.45);
+  if(!animateHeroOnLoad)return;
+  typewriter(document.querySelector('.speech-bubble'),false,.12);
 }
 // Words resolve in place with a measured typing rhythm and native wrapping.
 function setupHeroTitle() {
@@ -182,6 +221,7 @@ function setupHeroTitle() {
   const heading=document.querySelector('#intro-title');
   if (!heading) return;
   heroTitleHasPlayed=true;
+  if(!animateHeroOnLoad)return;
   const text=heading.textContent;
   const accessible=document.createElement('span');
   accessible.className='visually-hidden';accessible.textContent=text;
@@ -196,12 +236,15 @@ function setupHeroTitle() {
   heading.replaceChildren(accessible,visual);
   const words=[...visual.querySelectorAll('.hero-title-word')];
   gsap.set(words,{opacity:0,filter:'blur(3px)'});
-  const timeline=gsap.timeline({delay:.24});
-  let position=0;
+  const timeline=gsap.timeline({delay:.08});
+  let position=0,previousWordEnd=0;
   for (const word of words) {
-    timeline.to(word,{opacity:1,filter:'blur(0px)',duration:.24,ease:'power2.out'},position);
-    position+=.11+Math.min(word.textContent.length,10)*.012;
-    if (word.textContent.endsWith(':')) position+=.16;
+    if(/^avocat\b/i.test(word.textContent))position=previousWordEnd+.5;
+    timeline.to(word,{opacity:1,filter:'blur(0px)',duration:.3,ease:'power2.out'},position);
+    previousWordEnd=position+.3;
+    position+=.13+Math.min(word.textContent.length,10)*.012;
+    if (word.textContent.endsWith(',')) position+=.14;
+    if (word.textContent.endsWith(':')) position+=.12;
   }
   timeline.set(words,{clearProps:'filter'});
 
@@ -214,10 +257,6 @@ function setupStoryMotion() {
   bodyRevealCleanup=setupBodyLines();
 
   setupPaperArrivals();
-  if (!heroPaperHasPlayed) {
-    heroPaperHasPlayed=true;
-    gsap.from('.hero-paper',{x:-8,y:24,rotation:-.65,duration:.75,ease:'power2.out'});
-  }
 }
 
 // Reveal existing line boxes without splitting paragraphs or their links into copies.
@@ -228,6 +267,7 @@ function setupBodyLines() {
   });
   const paragraphs=document.querySelectorAll('.intro-copy p,.about-copy p,.reflections-copy p,.experience-copy p,.shoutouts-copy p,.contact-sheet > p');
   for (const paragraph of paragraphs) {
+    if(paragraph.matches('.intro-copy p')&&!animateHeroOnLoad)continue;
     paragraph.classList.add('body-line-reveal');
     const state={progress:0};
     gsap.set(paragraph,{maskImage:'none',webkitMaskImage:'none',maskRepeat:'no-repeat',webkitMaskRepeat:'no-repeat',maskSize:'auto',webkitMaskSize:'auto',maskPosition:'0 0',webkitMaskPosition:'0 0'});
@@ -256,7 +296,7 @@ function setupBodyLines() {
     };
     measure();render();renders.set(paragraph,render);motionRenderers.add(render);observer.observe(paragraph);
     const hero=paragraph.matches('.intro-copy p');
-    gsap.to(state,{progress:1,duration:Math.min(1.35,.5+(count-1)*.11),ease:'none',delay:hero?.8:.12,onUpdate:render,
+    gsap.to(state,{progress:1,duration:Math.min(1.35,.5+(count-1)*.11),ease:'none',delay:hero?.2:.12,onUpdate:render,
       scrollTrigger:hero ? undefined : {trigger:paragraph,start:viewportStart(paragraph,.92),end:()=>layoutBottom(paragraph),toggleActions:'play complete play reverse',onRefresh:render}
     });
   }
@@ -399,7 +439,7 @@ function setupPaperArrivals() {
     .to(footer,{rotation:0,duration:.18,ease:'sine.out'});
 }
 
-// Initialize after real fonts, image layout and native scroll restoration are ready.
+// Start motion with the deferred script; late assets refresh layout without gating the hero.
 // A refresh alone does not repaint custom text masks or reconcile skipped toggle callbacks.
 function synchronizeMotionToScroll() {
   if(!window.ScrollTrigger || reducedMotion.matches || manuallyReduced) return;
@@ -459,8 +499,7 @@ function queueMotionRefresh() {
 }
 const nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
 const pageLoaded=document.readyState==='complete' ? Promise.resolve() : new Promise(resolve=>window.addEventListener('load',resolve,{once:true}));
-Promise.all([document.fonts.ready,pageLoaded]).then(async()=>{
-  await nextFrame();await nextFrame();
+async function initializeMotion() {
   const restoredPosition=readReloadPosition();
   const initialPosition=restoredPosition || {x:scrollX,y:scrollY};
   if(restoredPosition)window.scrollTo({left:initialPosition.x,top:initialPosition.y,behavior:'instant'});
@@ -470,7 +509,11 @@ Promise.all([document.fonts.ready,pageLoaded]).then(async()=>{
   refreshMotionLayout();
   // Follow native restoration without forcing the visitor to scroll or resetting their position.
   await nextFrame();refreshMotionLayout();
-});
+}
+initializeMotion();
+// Fonts and offscreen imagery can finish later; preserve scroll restoration and masks.
+document.fonts.ready.then(queueMotionRefresh);
+pageLoaded.then(queueMotionRefresh);
 window.addEventListener('pageshow',()=>{requestAnimationFrame(()=>requestAnimationFrame(queueMotionRefresh));});
 // Let native smooth anchor navigation finish before a pending image/layout refresh.
 window.addEventListener('scroll',()=>{if(layoutRefreshTimer)queueMotionRefresh();},{passive:true});
