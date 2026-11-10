@@ -142,15 +142,16 @@ h1 { font-size:clamp(54px,5.56vw,88px); line-height:.9; font-weight:600; letter-
 
 
 /* November 9 client copy: lead with Fabrice's present-day work. */
-.intro-copy .hero-past { font-size:20px; line-height:1.4; font-weight:500; margin:0 0 16px; }
+.intro-copy .hero-past { font-size:16px; line-height:1.45; font-weight:500; margin:0 0 16px; }
 .intro-copy h1 { font-size:clamp(38px,3.8vw,62px); line-height:1.06; margin-bottom:22px; }
-.intro-copy .hero-activities { margin:0; }
+.intro-copy .hero-activities { font-size:22px; line-height:1.5; font-weight:500; margin:0; }
 @media(min-width:768px) and (max-width:991px) {
- .intro-copy .hero-past { font-size:17px; margin-bottom:14px; }
+ .intro-copy .hero-past { font-size:15px; margin-bottom:14px; }
+ .intro-copy .hero-activities { font-size:20px; }
  .intro-copy h1 { font-size:clamp(32px,4.2vw,42px); }
 }
 @media(max-width:767px) {
- .intro-copy .hero-past { font-size:18px; margin-bottom:16px; }
+ .intro-copy .hero-past { font-size:15px; margin-bottom:16px; }
  .intro-copy h1 { font-size:clamp(32px,8.4vw,40px); margin-bottom:18px; }
- .intro-copy .hero-activities { margin-bottom:0; }
+ .intro-copy .hero-activities { font-size:20px; margin-bottom:0; }
 }

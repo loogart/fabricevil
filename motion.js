@@ -235,18 +235,25 @@ function setupHeroTitle() {
   }
   heading.replaceChildren(accessible,visual);
   const words=[...visual.querySelectorAll('.hero-title-word')];
+  const eyebrow=document.querySelector('.hero-past');
+  const lead=document.querySelector('.hero-activities');
+  const invitation=document.querySelector('.intro-copy .speaker-invitation');
   gsap.set(words,{opacity:0,filter:'blur(3px)'});
+  gsap.set([eyebrow,lead,invitation].filter(Boolean),{autoAlpha:0,y:5});
   const timeline=gsap.timeline({delay:.08});
-  let position=0,previousWordEnd=0;
+  timeline.to(eyebrow,{autoAlpha:1,y:0,duration:.3,ease:'power2.out'},0);
+  let position=.5,previousWordEnd=.5;
   for (const word of words) {
-    if(/^avocat\b/i.test(word.textContent))position=previousWordEnd+.5;
-    timeline.to(word,{opacity:1,filter:'blur(0px)',duration:.3,ease:'power2.out'},position);
-    previousWordEnd=position+.3;
-    position+=.13+Math.min(word.textContent.length,10)*.012;
-    if (word.textContent.endsWith(',')) position+=.14;
-    if (word.textContent.endsWith(':')) position+=.12;
+    timeline.to(word,{opacity:1,filter:'blur(0px)',duration:.22,ease:'power2.out'},position);
+    previousWordEnd=position+.22;
+    position+=.075+Math.min(word.textContent.length,10)*.006;
+    if (word.textContent.endsWith(',')) position+=.08;
+    if (word.textContent.endsWith(':')) position+=.08;
   }
-  timeline.set(words,{clearProps:'filter'});
+  timeline.set(words,{clearProps:'filter'},previousWordEnd);
+  const leadStart=previousWordEnd+.14;
+  timeline.to(lead,{autoAlpha:1,y:0,duration:.45,ease:'power2.out'},leadStart)
+    .to(invitation,{autoAlpha:1,y:0,duration:.4,ease:'power2.out'},leadStart+.24);
 
 }
 function setupStoryMotion() {
@@ -265,9 +272,8 @@ function setupBodyLines() {
   const observer=new ResizeObserver(entries=>{
     if (active) for (const {target} of entries) renders.get(target)?.();
   });
-  const paragraphs=document.querySelectorAll('.intro-copy p,.about-copy p,.reflections-copy p,.experience-copy p,.shoutouts-copy p,.contact-sheet > p');
+  const paragraphs=document.querySelectorAll('.about-copy p,.reflections-copy p,.experience-copy p,.shoutouts-copy p,.contact-sheet > p');
   for (const paragraph of paragraphs) {
-    if(paragraph.matches('.intro-copy p')&&!animateHeroOnLoad)continue;
     paragraph.classList.add('body-line-reveal');
     const state={progress:0};
     gsap.set(paragraph,{maskImage:'none',webkitMaskImage:'none',maskRepeat:'no-repeat',webkitMaskRepeat:'no-repeat',maskSize:'auto',webkitMaskSize:'auto',maskPosition:'0 0',webkitMaskPosition:'0 0'});
@@ -295,9 +301,8 @@ function setupBodyLines() {
       image(gradients.join(','));position(positions.join(','));size(sizes.join(','));
     };
     measure();render();renders.set(paragraph,render);motionRenderers.add(render);observer.observe(paragraph);
-    const hero=paragraph.matches('.intro-copy p');
-    gsap.to(state,{progress:1,duration:Math.min(1.35,.5+(count-1)*.11),ease:'none',delay:hero?.2:.12,onUpdate:render,
-      scrollTrigger:hero ? undefined : {trigger:paragraph,start:viewportStart(paragraph,.92),end:()=>layoutBottom(paragraph),toggleActions:'play complete play reverse',onRefresh:render}
+    gsap.to(state,{progress:1,duration:Math.min(1.35,.5+(count-1)*.11),ease:'none',delay:.12,onUpdate:render,
+      scrollTrigger:{trigger:paragraph,start:viewportStart(paragraph,.92),end:()=>layoutBottom(paragraph),toggleActions:'play complete play reverse',onRefresh:render}
     });
   }
   return ()=>{active=false;observer.disconnect();renders.clear();};
