@@ -1,5 +1,8 @@
 :root { --ink:#26514e; --paper:#e0ded6; --lime:#d4ff53; --body-size:18px; --body-leading:1.65; }
 * { box-sizing:border-box; }
+/* Native text selection borrows the site's highlighter palette. */
+::selection { background-color:var(--lime); color:var(--ink); text-shadow:none; }
+::-moz-selection { background-color:var(--lime); color:var(--ink); text-shadow:none; }
 html { scroll-behavior:smooth; }
 body { margin:0; background:var(--paper); color:var(--ink); font-family:'IBM Plex Serif', Georgia, serif; font-size:var(--body-size); line-height:var(--body-leading); font-weight:500; }
 body::before { content:''; position:fixed; inset:0; background:url('assets/paper-base.webp') center/cover; opacity:.3; pointer-events:none; z-index:-1; }
