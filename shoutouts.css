@@ -50,9 +50,12 @@
 @media(max-width:360px) { .shoutouts-initiatives { gap:16px; }.shoutout-logo { width:68px; height:68px; } }
 
 /* Client-created paper cutouts retain their original transparent edges. */
-.shoutouts-third-row { display:grid; grid-template-columns:190fr 370fr; align-items:end; gap:38px; margin-top:34px; }
+.shoutouts-third-row { display:grid; grid-template-columns:190fr 350fr 210fr; align-items:end; gap:20px; margin-top:34px; }
 .shoutouts-third-row .shoutout-card:first-child { width:100%; max-width:180px; justify-self:center; }
-.shoutouts-third-row .shoutout-card:last-child { width:100%; max-width:360px; justify-self:center; }
+.shoutouts-third-row .moten-harney-card { width:100%; max-width:360px; justify-self:center; }
+.shoutouts-third-row .francois-card { width:100%; max-width:195px; justify-self:center; }
+.francois-card .shoutout-photo { overflow:hidden; }
+.francois-card .shoutout-photo img { object-position:center top; }
 .shoutouts-initiatives { gap:22px; align-items:start; }
 .shoutout-logo.initiative-card { width:auto; height:auto; border-radius:0; background:transparent; overflow:visible; display:flex; flex-direction:column; align-items:center; gap:12px; color:white; text-decoration:none; }
 .initiative-mark { position:relative; display:block; width:94px; height:94px; overflow:hidden; background:#f7f4ea; clip-path:polygon(1% 1%,98% 0,100% 97%,2% 100%,0 3%); }
@@ -78,7 +81,8 @@
  .shoutouts-second-row .shoutout-card:first-child { grid-column:1; grid-row:2; width:100%; max-width:180px; justify-self:center; }
  .shoutouts-third-row .shoutout-card:first-child { grid-column:2; grid-row:2; }
  .shoutouts-second-row .shoutout-card:last-child { grid-column:1 / -1; grid-row:3; width:100%; }
- .shoutouts-third-row .shoutout-card:last-child { grid-column:1 / -1; grid-row:4; width:86%; max-width:400px; }
+ .shoutouts-third-row .moten-harney-card { grid-column:1 / -1; grid-row:4; width:86%; max-width:400px; }
+ .shoutouts-third-row .francois-card { grid-column:1 / -1; grid-row:5; width:55%; max-width:195px; }
  .shoutouts-second-row .shoutout-name,.shoutouts-third-row .shoutout-name { font-size:16px; }
  .shoutouts-initiatives { grid-column:1 / -1; margin-top:0; }
 }
