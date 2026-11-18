@@ -185,3 +185,27 @@ h1 { font-size:clamp(54px,5.56vw,88px); line-height:.9; font-weight:600; letter-
  to { opacity:1; transform:translateY(0); }
 }
 @media(prefers-reduced-motion:reduce) { .speech-bubble { animation:none; } }
+
+/* The first pose rests between cycles, with one small blink during the hold. */
+.hero-character.is-idle .hero-blink-eyes { animation:hero-idle-blink 3s linear both; }
+.hero-character.is-idle-paused .hero-blink-eyes { animation-play-state:paused; }
+@keyframes hero-idle-blink {
+ 0%,35%,47%,100% { opacity:0; }
+ 39%,43% { opacity:1; }
+}
+@media(prefers-reduced-motion:reduce) { .hero-character.is-idle .hero-blink-eyes { animation:none; } }
+
+/* A relaxed inhale/exhale settles fully before the authored cycle resumes. */
+.hero-idle-head,.hero-idle-arm-left,.hero-idle-arm-right { transform-box:fill-box; }
+.hero-idle-head { transform-origin:50% 95%; }
+.hero-idle-arm-left,.hero-idle-arm-right { transform-origin:50% 8%; }
+.hero-character.is-idle .hero-idle-head { animation:hero-idle-head 3s ease-in-out both; }
+.hero-character.is-idle .hero-idle-arm-left { animation:hero-idle-arm-left 3s ease-in-out both; }
+.hero-character.is-idle .hero-idle-arm-right { animation:hero-idle-arm-right 3s ease-in-out both; }
+.hero-character.is-idle-paused :is(.hero-idle-head,.hero-idle-arm-left,.hero-idle-arm-right) { animation-play-state:paused; }
+@keyframes hero-idle-head { 0%,100% { transform:rotate(0); } 45%,55% { transform:rotate(5deg); } }
+@keyframes hero-idle-arm-left { 0%,100% { transform:rotate(0); } 45%,55% { transform:rotate(5deg); } }
+@keyframes hero-idle-arm-right { 0%,100% { transform:rotate(0); } 45%,55% { transform:rotate(-5deg); } }
+@media(prefers-reduced-motion:reduce) {
+ .hero-character.is-idle :is(.hero-idle-head,.hero-idle-arm-left,.hero-idle-arm-right) { animation:none; }
+}
