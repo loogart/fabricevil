@@ -28,7 +28,7 @@
   <meta name="twitter:image" content="https://fabricevil.com/assets/og-image.jpg">
   <meta name="twitter:image:alt" content="Illustration de Fabrice Vil sur papier quadrillé, avec son nom et la bulle Sa k ap fèt?">
   <!-- First-screen artwork and type should not wait for CSS image/font discovery. -->
-  <link rel="preload" as="image" href="assets/fabrice.svg" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/fabrice-hero-poster.svg" fetchpriority="high">
   <link rel="stylesheet" href="vendor/bootstrap.min.css">
   <link rel="stylesheet" href="assets/fonts.css">
   <link rel="stylesheet" href="styles.css">
@@ -39,6 +39,7 @@
   <script defer src="vendor/gsap.min.js"></script>
   <script defer src="vendor/ScrollTrigger.min.js"></script>
   <script defer src="motion.js?v=client-copy-oct21"></script>
+  <script defer src="hero-character.js"></script>
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -163,7 +164,10 @@
           <div class="character-column col-md-4">
             <div class="character-stage" data-lottie-slot="character">
               <div class="speech-bubble">Sa k ap fèt?</div>
-              <img class="fabrice" src="assets/fabrice.svg" fetchpriority="high" decoding="async" alt="Illustration originale de Fabrice Vil, avec lunettes, tresses et sac en bandoulière." width="303" height="671">
+              <div class="hero-character" role="img" aria-label="Illustration animée de Fabrice Vil : prise de parole, basketball et création.">
+                <img class="hero-character-poster" src="assets/fabrice-hero-poster.svg" fetchpriority="high" decoding="async" alt="" width="600" height="780" aria-hidden="true">
+                <div class="hero-character-animation" aria-hidden="true"></div>
+              </div>
             </div>
           </div>
           <div class="intro-copy col-md-8">

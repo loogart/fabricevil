@@ -213,7 +213,7 @@ function setupGreeting() {
   if (greetingHasPlayed) return;
   greetingHasPlayed=true;
   if(!animateHeroOnLoad)return;
-  typewriter(document.querySelector('.speech-bubble'),false,.12);
+  typewriter(document.querySelector('.speech-bubble'),false,1.5);
 }
 // Words resolve in place with a measured typing rhythm and native wrapping.
 function setupHeroTitle() {

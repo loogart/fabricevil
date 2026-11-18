@@ -158,3 +158,30 @@ h1 { font-size:clamp(54px,5.56vw,88px); line-height:.9; font-weight:600; letter-
  .intro-copy h1 { font-size:clamp(32px,8.4vw,40px); margin-bottom:18px; }
  .intro-copy .hero-activities { font-size:20px; margin-bottom:0; }
 }
+
+/* A matching SVG poster shows immediately while the vector animation loads. */
+.hero-character { position:absolute; top:55px; left:50%; width:360px; height:390px; transform:translateX(-50%); pointer-events:none; }
+.hero-character-poster,.hero-character-animation { position:absolute; inset:0; display:block; width:100%; height:100%; }
+.hero-character-poster { object-fit:contain; }
+.hero-character-animation { visibility:hidden; }
+.hero-character-animation svg { display:block; width:100%; height:100%; }
+.hero-character.is-ready .hero-character-animation { visibility:visible; }
+.hero-character.is-ready .hero-character-poster { visibility:hidden; }
+@media(min-width:768px) and (max-width:991px) {
+ .hero-character { top:58px; width:280px; height:285px; }
+}
+@media(max-width:767px) {
+ .hero-character { top:65px; width:300px; max-width:calc(100% + 20px); height:280px; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .hero-character.is-ready .hero-character-animation { visibility:hidden; }
+ .hero-character.is-ready .hero-character-poster { visibility:visible; }
+}
+
+/* Let the character arrive before its greeting. */
+.speech-bubble { animation:hero-greeting-arrive .25s ease-out 1.5s both; }
+@keyframes hero-greeting-arrive {
+ from { opacity:0; transform:translateY(5px); }
+ to { opacity:1; transform:translateY(0); }
+}
+@media(prefers-reduced-motion:reduce) { .speech-bubble { animation:none; } }
