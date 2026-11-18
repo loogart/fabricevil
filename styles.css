@@ -209,3 +209,14 @@ h1 { font-size:clamp(54px,5.56vw,88px); line-height:.9; font-weight:600; letter-
 @media(prefers-reduced-motion:reduce) {
  .hero-character.is-idle :is(.hero-idle-head,.hero-idle-arm-left,.hero-idle-arm-right) { animation:none; }
 }
+
+/* Keep the full character visible sooner on phone screens. */
+@media(max-width:767px) {
+ .masthead { padding-top:12px; padding-bottom:10px; gap:18px; }
+ .hero-body { padding-top:30px; padding-bottom:24px; }
+ .intro-copy .hero-past { margin-bottom:12px; }
+ .intro-copy h1 { margin-bottom:14px; }
+ .character-column { margin-top:14px; }
+ .character-stage { height:325px; }
+ .hero-character { top:45px; }
+}
